@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="ancPane" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.javafx.drivemax.controller.EmailPageController">
+   <children>
+      <VBox prefHeight="800.0" prefWidth="1100.0" style="-fx-background-color: #718093;">
+         <children>
+            <VBox prefHeight="57.0" prefWidth="1100.0" />
+            <VBox prefHeight="86.0" prefWidth="1100.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Select Recipient Type">
+                                 <font>
+                                    <Font name="Cambria Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <ComboBox fx:id="recipientTypeCombo" prefWidth="150.0" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Select ID">
+                                 <font>
+                                    <Font name="Cambria Bold" size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="100.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <ComboBox fx:id="idCombo" prefWidth="150.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="656.0" prefWidth="1100.0" style="-fx-background-color: #bdc3c7;">
+               <children>
+                  <TextField fx:id="emailField" prefHeight="38.0" prefWidth="1039.0" promptText="Email">
+                     <VBox.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="20.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField fx:id="subjectField" prefHeight="35.0" prefWidth="1039.0" promptText="Subject">
+                     <VBox.margin>
+                        <Insets bottom="50.0" left="30.0" right="30.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextArea fx:id="messageArea" prefHeight="384.0" prefWidth="1039.0" promptText="Type Massege Here">
+                     <VBox.margin>
+                        <Insets left="30.0" right="30.0" />
+                     </VBox.margin>
+                  </TextArea>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox prefHeight="158.0" prefWidth="1100.0">
+                           <children>
+                              <HBox prefHeight="158.0" prefWidth="632.0" />
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="btnCansel" mnemonicParsing="false" prefHeight="33.0" prefWidth="138.0" text="Cancel">
+                                       <HBox.margin>
+                                          <Insets top="40.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="btnSendMail" mnemonicParsing="false" prefHeight="34.0" prefWidth="126.0" text="Send Mail">
+                                       <HBox.margin>
+                                          <Insets top="40.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
