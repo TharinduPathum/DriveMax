@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
@@ -113,5 +114,10 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         }
 
         return empIdList;
+    }
+
+    @Override
+    public Optional<Employee> findById(String id) throws SQLException {
+        return Optional.empty();
     }
 }

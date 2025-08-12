@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SalaryDAOImpl implements SalaryDAO {
     @Override
@@ -91,5 +92,10 @@ public class SalaryDAOImpl implements SalaryDAO {
     @Override
     public List<String> getAllIds() throws SQLException {
         return List.of();
+    }
+
+    @Override
+    public Optional<Salary> findById(String id) throws SQLException {
+        return Optional.empty();
     }
 }

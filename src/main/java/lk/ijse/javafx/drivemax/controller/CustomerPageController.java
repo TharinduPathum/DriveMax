@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.custom.CustomerBO;
 import lk.ijse.javafx.drivemax.db.DBConnection;
 import lk.ijse.javafx.drivemax.dto.CustomerDto;
 import lk.ijse.javafx.drivemax.dto.tm.CustomerTM;
@@ -18,6 +19,8 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,6 +37,8 @@ public class CustomerPageController implements Initializable {
     public TextField phoneNoField;
 
     private final CustomerModel customerModel = new CustomerModel();
+    private final CustomerBO customerBO = BOFactory.getInstance().getBO(BOTypes.CUSTOMER);
+
 
     public TableView<CustomerTM> customerTable;
     public TableColumn<CustomerTM, String> colId;
@@ -136,33 +141,37 @@ public class CustomerPageController implements Initializable {
 
 
 
-    public void BtnSaveOnAction(ActionEvent event) {
+    public void BtnSaveOnAction(ActionEvent event) throws Exception {
         if (!isValidInput()) return;
 
-       String customerId = custidValueLabel.getText();
-       String name = nameField.getText();
-       String address = addressField.getText();
-       String email = emailField.getText();
-       String phone = phoneNoField.getText();
+        String customerId = custidValueLabel.getText();
+        String name = nameField.getText();
+        String address = addressField.getText();
+        String email = emailField.getText();
+        String phone = phoneNoField.getText();
 
-       CustomerDto customerDto = new CustomerDto(
-               customerId,
-               name,
-               address,
-               email,
-               phone
-       );
+        CustomerDto customerDto = new CustomerDto(
+                customerId,
+                name,
+                address,
+                email,
+                phone
+        );
 
-            try {
-            boolean isSave = customerModel.saveCustomer(customerDto);
-            if (isSave) {
+
+        try {
+            // Get BO instance from the factory
+           // CustomerBO customerBO = BOFactory.getInstance().getBO(BOTypes.CUSTOMER);
+
+
+            if (customerBO.saveCustomer(customerDto)) {
                 loadNextId();
                 loadTableData();
 
-                nameField.setText("");
-                addressField.setText("");
-                emailField.setText("");
-                phoneNoField.setText("");
+                nameField.clear();
+                addressField.clear();
+                emailField.clear();
+                phoneNoField.clear();
 
                 new Alert(
                         Alert.AlertType.INFORMATION, "Customer saved successfully..!"
@@ -178,6 +187,9 @@ public class CustomerPageController implements Initializable {
                     Alert.AlertType.ERROR, "Fail to save customer..!"
             ).show();
         }
+
+
+
 
     }
 

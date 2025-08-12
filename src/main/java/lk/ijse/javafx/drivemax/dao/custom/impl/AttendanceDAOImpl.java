@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AttendanceDAOImpl implements AttendanceDAO {
     @Override
@@ -65,6 +66,11 @@ public class AttendanceDAOImpl implements AttendanceDAO {
     @Override
     public List<String> getAllIds() throws SQLException {
         return List.of();
+    }
+
+    @Override
+    public Optional<Attendance> findById(String id) throws SQLException {
+        return Optional.empty();
     }
 
 

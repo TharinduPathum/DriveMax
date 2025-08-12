@@ -3,9 +3,9 @@ module lk.ijse.javafx.drivemax {
     requires javafx.fxml;
     requires java.sql;
     requires static lombok;
-    requires java.desktop;
     requires net.sf.jasperreports.core;
     requires java.mail;
+    requires jdk.accessibility;
 
 
     opens lk.ijse.javafx.drivemax.controller to javafx.fxml;

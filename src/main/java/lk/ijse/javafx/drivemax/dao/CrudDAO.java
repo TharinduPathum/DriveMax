@@ -2,6 +2,7 @@ package lk.ijse.javafx.drivemax.dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public interface CrudDAO<T> extends SuperDAO {
     List<T> getAll() throws SQLException;
@@ -15,4 +16,6 @@ public interface CrudDAO<T> extends SuperDAO {
     boolean delete(String id) throws SQLException;
 
     List<String> getAllIds() throws SQLException;
+
+    Optional<T> findById(String id) throws SQLException;
 }

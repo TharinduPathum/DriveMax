@@ -27,7 +27,7 @@ public class LoginPageController {
             String password = txtGetPassword.getText().trim();
 
             // Dummy check
-            if (username.equals("admin") && password.equals("admin1234")) {
+            if (username.equals("a") && password.equals("a")) {
                 Parent root = FXMLLoader.load(getClass().getResource("/view/Dashboards.fxml"));
                 Stage stage = (Stage) txtGetUsername.getScene().getWindow();
                 stage.setScene(new Scene(root));

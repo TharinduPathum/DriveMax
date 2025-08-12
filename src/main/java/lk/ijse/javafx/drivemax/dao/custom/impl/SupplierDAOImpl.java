@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SupplierDAOImpl implements SupplierDAO {
     @Override
@@ -97,6 +98,11 @@ public class SupplierDAOImpl implements SupplierDAO {
         }
 
         return idList;
+    }
+
+    @Override
+    public Optional<Supplier> findById(String id) throws SQLException {
+        return Optional.empty();
     }
 
     @Override

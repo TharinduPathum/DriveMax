@@ -1,6 +1,7 @@
 package lk.ijse.javafx.drivemax.dao;
 
-import lk.ijse.javafx.drivemax.dao.custom.impl.CustomerDAOImpl;
+import lk.ijse.javafx.drivemax.bo.custom.impl.AttendanceBOImpl;
+import lk.ijse.javafx.drivemax.dao.custom.impl.*;
 
 public class DAOFactory {
     private static DAOFactory daoFactory;
@@ -14,21 +15,19 @@ public class DAOFactory {
 
     public <T extends SuperDAO> T getDAO(DAOTypes daoType) {
         return switch (daoType) {
-            case ATTENDANCE -> null;
+            case ATTENDANCE -> (T) new AttendanceBOImpl();
             case CUSTOMER -> (T) new CustomerDAOImpl();
-            case EMAIL -> null;
-            case EMPLOYEE -> null;
-            case FEEDBACK -> null;
-            case INVENTORY -> null;
-            case INVOICE -> null;
-            case OT -> null;
-            case PAYMENT -> null;
-            case RECORD -> null;
-            case REPAIR -> null;
-            case SALARY -> null;
-            case SPAREPART -> null;
-            case SUPPLIER -> null;
-            case VEHICLE -> null;
+            case EMPLOYEE -> (T) new EmployeeDAOImpl();
+            case INVENTORY -> (T) new InventoryDAOImpl();
+            case INVOICE -> (T) new InvoiceDAOImpl();
+            case OT -> (T) new OTDAOImpl();
+            case PAYMENT -> (T) new PaymentDAOImpl();
+            case RECORD -> (T) new RecordDAOImpl();
+            case REPAIR -> (T) new RepairDAOImpl();
+            case SALARY -> (T) new SalaryDAOImpl();
+            case SPAREPART -> (T) new SparepartDAOImpl();
+            case SUPPLIER -> (T) new SupplierDAOImpl();
+            case VEHICLE -> (T) new VehicleDAOImpl();
         };
 
         }

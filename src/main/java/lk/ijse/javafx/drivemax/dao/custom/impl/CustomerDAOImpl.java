@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CustomerDAOImpl implements CustomerDAO {
     @Override
@@ -59,9 +60,24 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public String getCustomerEmailById(String custId) throws SQLException {
+    public Optional<Customer> findById(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM customer WHERE c_id = ?", id);
+        if (resultSet.next()) {
+            return Optional.of(new Customer(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getString(5)
+            ));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public String getCustomerEmailById(String id) throws SQLException {
         String sql = "SELECT email FROM customer WHERE c_id = ?";
-        ResultSet rs = SQLUtil.execute(sql, custId);
+        ResultSet rs = SQLUtil.execute(sql, id);
 
         if (rs.next()) {
             return rs.getString("email");
@@ -70,10 +86,21 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
+    public boolean existsCustomerByPhoneNumber(String phoneNumber) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM customer WHERE phone = ?", phoneNumber);
+//        if (resultSet.next()){
+//            return true;
+//        }
+//        return false;
+
+        return resultSet.next(); //related data exist, can't add a data
+    }
+
+    @Override
     public boolean save(Customer customer) throws SQLException {
 
         return SQLUtil.execute(
-                "insert into customer values (?,?,?,?,?)",
+                "insert into customer(c_id, name, address, email, phone) values (?, ?, ?, ?, ?)",
                 customer.getId(),
                 customer.getName(),
                 customer.getAddress(),
@@ -98,9 +125,9 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public boolean delete(String customerId) throws SQLException {
+    public boolean delete(String id) throws SQLException {
         String sql = "DELETE FROM customer WHERE c_id = ?";
-        return SQLUtil.execute(sql, customerId);
+        return SQLUtil.execute(sql, id);
     }
 
 }

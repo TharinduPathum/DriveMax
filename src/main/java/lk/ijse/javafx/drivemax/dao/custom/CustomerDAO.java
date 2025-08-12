@@ -8,5 +8,8 @@ import java.util.List;
 
 public interface CustomerDAO extends CrudDAO<Customer> {
 
-    String getCustomerEmailById(String custId) throws SQLException;
+    String getCustomerEmailById(String id) throws SQLException;
+
+    boolean existsCustomerByPhoneNumber(String phoneNumber) throws SQLException;
+
 }

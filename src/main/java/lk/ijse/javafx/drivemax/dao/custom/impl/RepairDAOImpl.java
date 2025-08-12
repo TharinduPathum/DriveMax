@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RepairDAOImpl implements RepairDAO {
     @Override
@@ -96,5 +97,10 @@ public class RepairDAOImpl implements RepairDAO {
     @Override
     public List<String> getAllIds() throws SQLException {
         return List.of();
+    }
+
+    @Override
+    public Optional<Repair> findById(String id) throws SQLException {
+        return Optional.empty();
     }
 }

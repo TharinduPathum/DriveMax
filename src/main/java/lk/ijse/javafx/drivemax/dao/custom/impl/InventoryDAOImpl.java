@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class InventoryDAOImpl implements InventoryDAO {
     @Override
@@ -90,5 +91,10 @@ public class InventoryDAOImpl implements InventoryDAO {
     @Override
     public List<String> getAllIds() throws SQLException {
         return List.of();
+    }
+
+    @Override
+    public Optional<Inventory> findById(String id) throws SQLException {
+        return Optional.empty();
     }
 }
