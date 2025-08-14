@@ -5,7 +5,6 @@ import lk.ijse.javafx.drivemax.bo.exception.DuplicateException;
 import lk.ijse.javafx.drivemax.bo.exception.InUseException;
 import lk.ijse.javafx.drivemax.bo.exception.NotFoundException;
 import lk.ijse.javafx.drivemax.dto.AttendanceDto;
-import lk.ijse.javafx.drivemax.dto.CustomerDto;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,7 +14,7 @@ public interface AttendanceBO extends SuperBO {
 
     boolean saveAttendance(AttendanceDto attendanceDto) throws DuplicateException, Exception;
 
-    boolean deleteAttendance(String id) throws InUseException, Exception;
+    boolean deleteAttendance(String id,String date) throws InUseException, Exception;
 
-    void updateAttendance(AttendanceDto attendanceDto) throws NotFoundException, Exception;
+    boolean updateAttendance(AttendanceDto dto) throws NotFoundException, Exception;
 }

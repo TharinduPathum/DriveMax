@@ -7,9 +7,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
 import lk.ijse.javafx.drivemax.dto.InvoiceDto;
 import lk.ijse.javafx.drivemax.dto.tm.InvoiceTM;
-import lk.ijse.javafx.drivemax.model.InvoiceModel;
+
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -56,7 +59,7 @@ public class InvoicePageController implements Initializable {
     @FXML
     private TextField payIdField;
 
-    private final InvoiceModel invoiceModel = new InvoiceModel();
+    private final InvoiceBO invoiceBO = BOFactory.getInstance().getBO(BOTypes.INVOICE);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -89,12 +92,12 @@ public class InvoicePageController implements Initializable {
     }
 
     private void loadNextId() throws SQLException {
-        String nextId = invoiceModel.getNextId();
+        String nextId = invoiceBO.getNextId();
         invoiceIdLabel.setText(nextId);
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<InvoiceDto> list = invoiceModel.getAllInvoices();
+        ArrayList<InvoiceDto> list = invoiceBO.getAllInvoices();
         Collections.reverse(list);
 
         ObservableList<InvoiceTM> observableList = FXCollections.observableArrayList();
@@ -160,7 +163,7 @@ public class InvoicePageController implements Initializable {
                 date);
 
         try {
-            boolean isSaved = invoiceModel.saveInvoice(invoiceDto);
+            boolean isSaved = invoiceBO.saveInvoice(invoiceDto);
             if (isSaved) {
                 loadNextId();
                 loadTableData();
@@ -180,7 +183,7 @@ public class InvoicePageController implements Initializable {
         String invoiceId = invoiceIdLabel.getText();
 
         try {
-            boolean isDeleted = invoiceModel.deleteInvoice(invoiceId);
+            boolean isDeleted = invoiceBO.deleteInvoice(invoiceId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -229,7 +232,7 @@ public class InvoicePageController implements Initializable {
                 date);
 
         try {
-            boolean isUpdated = invoiceModel.updateInvoice(invoiceDto);
+            boolean isUpdated = invoiceBO.updateInvoice(invoiceDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "Invoice updated successfully!").show();

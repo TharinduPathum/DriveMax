@@ -8,9 +8,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
+import lk.ijse.javafx.drivemax.bo.custom.SparepartBO;
 import lk.ijse.javafx.drivemax.dto.SparepartDto;
 import lk.ijse.javafx.drivemax.dto.tm.SparepartTM;
-import lk.ijse.javafx.drivemax.model.SparepartModel;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -25,7 +28,7 @@ public class SparepartPageController implements Initializable {
     public TextField repairField;
     public TextField sparepartField;
 
-    private final SparepartModel sparepartModel = new SparepartModel();
+    private final SparepartBO sparepartBO = BOFactory.getInstance().getBO(BOTypes.SPAREPART);
 
     public TableView<SparepartTM> sparePartTable;
     public TableColumn<SparepartTM, String> colSparePart;
@@ -62,7 +65,7 @@ public class SparepartPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<SparepartDto> sparepartDTOArrayList = sparepartModel.getAllSparePartUsages();
+        ArrayList<SparepartDto> sparepartDTOArrayList = sparepartBO.getAllSparePartUsages();
 
         Collections.reverse(sparepartDTOArrayList);
 
@@ -108,7 +111,7 @@ public class SparepartPageController implements Initializable {
         SparepartDto sparepartDto = new SparepartDto(sparePartId, repair, date);
 
         try {
-            boolean isSaved = sparepartModel.saveSparePartUsageWithInventoryUpdate(sparepartDto);
+            boolean isSaved = sparepartBO.saveSparePartUsageWithInventoryUpdate(sparepartDto);
             if (isSaved) {
                 loadTableData();
                 btnResetOnAction(null);
@@ -133,7 +136,7 @@ public class SparepartPageController implements Initializable {
         String sparePartId = sparepartField.getText();
 
         try {
-            boolean isDeleted = sparepartModel.deleteSparePartUsage(sparePartId);
+            boolean isDeleted = sparepartBO.deleteSparePartUsage(sparePartId);
             if (isDeleted) {
 
                 loadTableData();
@@ -176,7 +179,7 @@ public class SparepartPageController implements Initializable {
         SparepartDto sparepartDto = new SparepartDto(sparePartId, repair, date);
 
         try {
-            boolean isUpdated = sparepartModel.updateSparePartUsage(sparepartDto);
+            boolean isUpdated = sparepartBO.updateSparePartUsage(sparepartDto);
             if (isUpdated) {
                 loadTableData();
                 btnResetOnAction(null);

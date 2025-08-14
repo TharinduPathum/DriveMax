@@ -8,10 +8,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.AttendanceBO;
+import lk.ijse.javafx.drivemax.bo.custom.EmployeeBO;
 import lk.ijse.javafx.drivemax.dto.AttendanceDto;
 import lk.ijse.javafx.drivemax.dto.tm.AttendanceTM;
-import lk.ijse.javafx.drivemax.model.AttendanceModel;
-import lk.ijse.javafx.drivemax.model.EmployeeModel;
+
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -44,7 +47,8 @@ public class AttendancePageController implements Initializable {
     @FXML
     public AnchorPane ancPane;
 
-    private final AttendanceModel attendanceModel = new AttendanceModel();
+    private final AttendanceBO attendanceBO = BOFactory.getInstance().getBO(BOTypes.ATTENDANCE);
+    private final EmployeeBO employeeBO = BOFactory.getInstance().getBO(BOTypes.EMPLOYEE);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -74,7 +78,7 @@ public class AttendancePageController implements Initializable {
         empIdComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 try {
-                    String empName = employeeModel.getEmployeeName(newVal);
+                    String empName = employeeBO.getEmployeeName(newVal);
                     empNameLabel.setText(empName != null ? empName : "Name not found");
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -88,23 +92,22 @@ public class AttendancePageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<AttendanceDto> attendanceList = attendanceModel.getAllAttendance();
+        attendanceTable.setItems(FXCollections.observableArrayList(
+                attendanceBO.getAllAttendance().stream().map(attendanceDto ->
+                        new AttendanceTM(
+                                attendanceDto.getEmpId(),
+                                attendanceDto.getDate(),
+                                attendanceDto.getStatus()
 
-        Collections.reverse(attendanceList);
-
-        ObservableList<AttendanceTM> observableList = FXCollections.observableArrayList();
-        for (AttendanceDto dto : attendanceList) {
-            observableList.add(new AttendanceTM(dto.getEmpId(), dto.getDate(), dto.getStatus()));
-        }
-
-        attendanceTable.setItems(observableList);
+                        )).toList()
+        ));
     }
 
-    private final EmployeeModel employeeModel = new EmployeeModel();
+
 
     private void loadEmployeeIds() {
         try {
-            ArrayList<String> ids = employeeModel.getAllEmployeeIds();
+            ArrayList<String> ids = employeeBO.getAllEmployeeIds();
             empIdComboBox.setItems(FXCollections.observableArrayList(ids));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -126,7 +129,7 @@ public class AttendancePageController implements Initializable {
         AttendanceDto dto = new AttendanceDto(empId, date, status);
 
         try {
-            boolean isSaved = attendanceModel.saveAttendance(dto);
+            boolean isSaved = attendanceBO.saveAttendance(dto);
             if (isSaved) {
                 loadTableData();
                 btnResetOnAction(null);
@@ -145,7 +148,7 @@ public class AttendancePageController implements Initializable {
         String date = datePicker.getValue().toString();
 
         try {
-            boolean isDeleted = attendanceModel.deleteAttendance(empId, date);
+            boolean isDeleted = attendanceBO.deleteAttendance(empId, date);
             if (isDeleted) {
                 loadTableData();
                 btnResetOnAction(null);
@@ -167,7 +170,7 @@ public class AttendancePageController implements Initializable {
         AttendanceDto dto = new AttendanceDto(empId, date, status);
 
         try {
-            boolean isUpdated = attendanceModel.updateAttendance(dto);
+            boolean isUpdated =  attendanceBO.updateAttendance(dto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "Attendance updated successfully!").show();

@@ -103,4 +103,10 @@ public class RepairDAOImpl implements RepairDAO {
     public Optional<Repair> findById(String id) throws SQLException {
         return Optional.empty();
     }
+
+    @Override
+    public boolean existRepairsByEmployeeId(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM repair WHERE rep_id = ?",id );
+        return resultSet.next();
+    }
 }

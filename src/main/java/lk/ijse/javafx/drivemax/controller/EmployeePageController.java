@@ -9,9 +9,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.EmployeeBO;
 import lk.ijse.javafx.drivemax.dto.EmployeeDto;
+import lk.ijse.javafx.drivemax.dto.tm.CustomerTM;
 import lk.ijse.javafx.drivemax.dto.tm.EmployeeTM;
-import lk.ijse.javafx.drivemax.model.EmployeeModel;
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +35,7 @@ public class EmployeePageController implements Initializable {
     public TextField phoneNoField;
     public TextField specialityField;
 
-    private final EmployeeModel employeeModel = new EmployeeModel();
+    private final EmployeeBO employeeBO = BOFactory.getInstance().getBO(BOTypes.EMPLOYEE);
     public TableView<EmployeeTM> employeeTable;
     public TableColumn<EmployeeTM, String> colId;
     public TableColumn<EmployeeTM, String> colName;
@@ -75,27 +79,21 @@ public class EmployeePageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        // 1. Long code
-        ArrayList<EmployeeDto> employeeDTOArrayList = employeeModel.getAllEmployee();
-        Collections.reverse(employeeDTOArrayList);
-        ObservableList<EmployeeTM> list = FXCollections.observableArrayList();
-
-        for (EmployeeDto employeeDto : employeeDTOArrayList){
-            EmployeeTM employeeTM = new EmployeeTM(
-                    employeeDto.getEmployeeId(),
-                    employeeDto.getName(),
-                    employeeDto.getSpeciality(),
-                    employeeDto.getAddress(),
-                    employeeDto.getEmail(),
-                    employeeDto.getPhone()
-            );
-            list.add(employeeTM);
-        }
-        employeeTable.setItems(list);
+        employeeTable.setItems(FXCollections.observableArrayList(
+                employeeBO.getAllEmployee().stream().map(employeeDTO ->
+                        new EmployeeTM(
+                                employeeDTO.getEmployeeId(),
+                                employeeDTO.getName(),
+                                employeeDTO.getSpeciality(),
+                                employeeDTO.getAddress(),
+                                employeeDTO.getEmail(),
+                                employeeDTO.getPhone()
+                        )).toList()
+        ));
     }
 
     private void loadNextId() throws SQLException {
-        String nextId = employeeModel.getNextId();
+        String nextId = employeeBO.getNextId();
         empidValueLabel.setText(nextId);
     }
 
@@ -162,7 +160,7 @@ public class EmployeePageController implements Initializable {
 
 
         try {
-            boolean isSave = employeeModel.saveEmployee(employeeDto);
+            boolean isSave = employeeBO.saveEmployee(employeeDto);
             if (isSave) {
                 loadNextId();
                 loadTableData();
@@ -194,7 +192,7 @@ public class EmployeePageController implements Initializable {
         String empId = empidValueLabel.getText();
 
         try {
-            boolean isDeleted = employeeModel.deleteEmployee(empId);
+            boolean isDeleted = employeeBO.deleteEmployee(empId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -255,7 +253,7 @@ public class EmployeePageController implements Initializable {
         );
 
         try {
-            boolean isUpdated = employeeModel.updateEmployee(employeeDto);
+            boolean isUpdated = employeeBO.updateEmployee(employeeDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "Employee updated successfully!").show();

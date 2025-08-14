@@ -9,9 +9,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
+import lk.ijse.javafx.drivemax.bo.custom.RecordBO;
+import lk.ijse.javafx.drivemax.bo.custom.RepairBO;
 import lk.ijse.javafx.drivemax.dto.RepairDto;
 import lk.ijse.javafx.drivemax.dto.tm.RepairTM;
-import lk.ijse.javafx.drivemax.model.RepairModel;
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,7 +37,7 @@ public class RepairPageController implements Initializable {
     public TableColumn<RepairTM, String> colCost;
 
 
-    private final RepairModel repairModel = new RepairModel();
+    private final RepairBO repairBO = BOFactory.getInstance().getBO(BOTypes.REPAIR);
 
     public DatePicker datePicker;
     public TextField empField;
@@ -77,7 +82,7 @@ public class RepairPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<RepairDto> repairDTOArrayList = repairModel.getAllRepairs();
+        ArrayList<RepairDto> repairDTOArrayList = repairBO.getAllRepairs();
 
         Collections.reverse(repairDTOArrayList);
 
@@ -99,7 +104,7 @@ public class RepairPageController implements Initializable {
 
 
     private void loadNextId() throws SQLException {
-        String nextId = repairModel.getNextId();
+        String nextId = repairBO.getNextId();
         repidValueLabel.setText(nextId);
     }
 
@@ -161,7 +166,7 @@ public class RepairPageController implements Initializable {
         );
 
         try {
-            boolean isSave = repairModel.saveRepair(repairDto);
+            boolean isSave = repairBO.saveRepair(repairDto);
             if (isSave) {
                 loadNextId();
                 loadTableData();
@@ -197,7 +202,7 @@ public class RepairPageController implements Initializable {
         String repairId = repidValueLabel.getText();
 
         try {
-            boolean isDeleted = repairModel.deleteRepair(repairId);
+            boolean isDeleted = repairBO.deleteRepair(repairId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -252,7 +257,7 @@ public class RepairPageController implements Initializable {
         );
 
         try {
-            boolean isUpdated = repairModel.updateRepair(repairDto);
+            boolean isUpdated = repairBO.updateRepair(repairDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "Repair work updated successfully!").show();

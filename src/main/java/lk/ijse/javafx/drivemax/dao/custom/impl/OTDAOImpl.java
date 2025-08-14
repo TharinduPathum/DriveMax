@@ -2,9 +2,7 @@ package lk.ijse.javafx.drivemax.dao.custom.impl;
 
 import lk.ijse.javafx.drivemax.dao.SQLUtil;
 import lk.ijse.javafx.drivemax.dao.custom.OTDAO;
-import lk.ijse.javafx.drivemax.dto.OTDto;
 import lk.ijse.javafx.drivemax.entity.OT;
-import lk.ijse.javafx.drivemax.util.CrudUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

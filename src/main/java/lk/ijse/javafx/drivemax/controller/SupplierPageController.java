@@ -9,9 +9,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
+import lk.ijse.javafx.drivemax.bo.custom.SupplierBO;
 import lk.ijse.javafx.drivemax.dto.SupplierDto;
 import lk.ijse.javafx.drivemax.dto.tm.SupplierTM;
-import lk.ijse.javafx.drivemax.model.SupplierModel;
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +32,7 @@ public class SupplierPageController implements Initializable {
     public TextField phoneNoField;
     public Label supidValueLabel;
 
-    private final SupplierModel supplierModel = new SupplierModel();
+    private final SupplierBO supplierBO = BOFactory.getInstance().getBO(BOTypes.SUPPLIER);
 
     public TableView<SupplierTM> supplierTable;
     public TableColumn<SupplierTM, String> colSupId;
@@ -72,7 +76,7 @@ public class SupplierPageController implements Initializable {
 
     private void loadTableData() throws SQLException {
         // 1. Long code
-        ArrayList<SupplierDto> supplierDTOArrayList = supplierModel.getAllSupplier();
+        ArrayList<SupplierDto> supplierDTOArrayList = supplierBO.getAllSupplier();
         Collections.reverse(supplierDTOArrayList);
         ObservableList<SupplierTM> list = FXCollections.observableArrayList();
 
@@ -90,7 +94,7 @@ public class SupplierPageController implements Initializable {
     }
 
     private void loadNextId() throws SQLException {
-        String nextId = supplierModel.getNextId();
+        String nextId = supplierBO.getNextId();
         supidValueLabel.setText(nextId);
     }
 
@@ -147,7 +151,7 @@ public class SupplierPageController implements Initializable {
         );
 
         try {
-            boolean isSave = supplierModel.saveSupplier(supplierDto);
+            boolean isSave = supplierBO.saveSupplier(supplierDto);
             if (isSave) {
                 loadNextId();
                 loadTableData();
@@ -180,7 +184,7 @@ public class SupplierPageController implements Initializable {
         String supplierId = supidValueLabel.getText();
 
         try {
-            boolean isDeleted = supplierModel.deleteSupplier(supplierId);
+            boolean isDeleted = supplierBO.deleteSupplier(supplierId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -236,7 +240,7 @@ public class SupplierPageController implements Initializable {
         );
 
         try {
-            boolean isUpdated = supplierModel.updateSupplier(supplierDto);
+            boolean isUpdated = supplierBO.updateSupplier(supplierDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "Supplier updated successfully!").show();

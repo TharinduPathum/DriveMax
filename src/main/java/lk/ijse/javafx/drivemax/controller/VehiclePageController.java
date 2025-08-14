@@ -9,9 +9,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
+import lk.ijse.javafx.drivemax.bo.custom.VehicleBO;
 import lk.ijse.javafx.drivemax.dto.VehicleDto;
 import lk.ijse.javafx.drivemax.dto.tm.VehicleTM;
-import lk.ijse.javafx.drivemax.model.VehicleModel;
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,7 +33,7 @@ public class VehiclePageController implements Initializable {
     public TextField regNoField;
     public TextField typeField;
 
-    private final VehicleModel vehicleModel = new VehicleModel();
+    private final VehicleBO vehicleBO = BOFactory.getInstance().getBO(BOTypes.VEHICLE);
 
     public TableView<VehicleTM> vehicleTable;
     public TableColumn<VehicleTM, String> colVehicleId;
@@ -72,7 +76,7 @@ public class VehiclePageController implements Initializable {
 
     public void loadTableData() throws SQLException {
         // 1. Long code
-        ArrayList<VehicleDto> vehicleDTOArrayList = vehicleModel.getAllVehicle();
+        ArrayList<VehicleDto> vehicleDTOArrayList = vehicleBO.getAllVehicle();
         Collections.reverse(vehicleDTOArrayList);
         ObservableList<VehicleTM> list = FXCollections.observableArrayList();
 
@@ -90,7 +94,7 @@ public class VehiclePageController implements Initializable {
     }
 
     private void loadNextId() throws SQLException {
-        String nextId = vehicleModel.getNextId();
+        String nextId = vehicleBO.getNextId();
         vehidValueLabel.setText(nextId);
     }
 
@@ -143,7 +147,7 @@ public class VehiclePageController implements Initializable {
         );
 
         try {
-            boolean isSave = vehicleModel.saveVehicle(vehicleDto);
+            boolean isSave = vehicleBO.saveVehicle(vehicleDto);
             if (isSave) {
                 loadNextId();
                 loadTableData();
@@ -177,7 +181,7 @@ public class VehiclePageController implements Initializable {
         String vehicleId = vehidValueLabel.getText();
 
         try {
-            boolean isDeleted = vehicleModel.deleteVehicle(vehicleId);
+            boolean isDeleted = vehicleBO.deleteVehicle(vehicleId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -232,7 +236,7 @@ public class VehiclePageController implements Initializable {
         );
 
         try {
-            boolean isUpdated = vehicleModel.updateVehicle(vehicleDto);
+            boolean isUpdated = vehicleBO.updateVehicle(vehicleDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "Vehicle updated successfully!").show();

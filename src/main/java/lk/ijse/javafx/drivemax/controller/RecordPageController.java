@@ -8,10 +8,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
+import lk.ijse.javafx.drivemax.bo.custom.RecordBO;
 import lk.ijse.javafx.drivemax.dto.CustomerDto;
 import lk.ijse.javafx.drivemax.dto.RecordDto;
 import lk.ijse.javafx.drivemax.dto.tm.RecordTM;
-import lk.ijse.javafx.drivemax.model.RecordModel;
+
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -28,7 +32,7 @@ public class RecordPageController implements Initializable {
     public TableColumn<RecordTM, String> colDescription;
     public TableColumn<RecordTM, String> colDate;
 
-    private final RecordModel recordModel = new RecordModel();
+    private final RecordBO recordBO = BOFactory.getInstance().getBO(BOTypes.RECORD);
 
     public TextField descriptionField;
     public TextField vehIdField;
@@ -67,7 +71,7 @@ public class RecordPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<RecordDto> recordDTOArrayList = recordModel.getAllRecords();
+        ArrayList<RecordDto> recordDTOArrayList = recordBO.getAllRecords();
 
         Collections.reverse(recordDTOArrayList);
 
@@ -87,7 +91,7 @@ public class RecordPageController implements Initializable {
 
 
     private void loadNextId() throws SQLException {
-        String nextId = recordModel.getNextId();
+        String nextId = recordBO.getNextId();
         recIdValueLabel.setText(nextId);
     }
 
@@ -133,7 +137,7 @@ public class RecordPageController implements Initializable {
         );
 
         try {
-            boolean isSave = recordModel.saveRecord(recordDto);
+            boolean isSave = recordBO.saveRecord(recordDto);
             if (isSave) {
                 loadNextId();
                 loadTableData();
@@ -167,7 +171,7 @@ public class RecordPageController implements Initializable {
         String recordId = recIdValueLabel.getText();
 
         try {
-            boolean isDeleted = recordModel.deleteRecord(recordId);
+            boolean isDeleted = recordBO.deleteRecord(recordId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -216,7 +220,7 @@ public class RecordPageController implements Initializable {
         );
 
         try {
-            boolean isUpdated = recordModel.updateRecord(recordDto);
+            boolean isUpdated = recordBO.updateRecord(recordDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "Record updated successfully!").show();

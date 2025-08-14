@@ -3,6 +3,7 @@ package lk.ijse.javafx.drivemax.dao.custom.impl;
 import lk.ijse.javafx.drivemax.dao.SQLUtil;
 import lk.ijse.javafx.drivemax.dao.custom.EmployeeDAO;
 import lk.ijse.javafx.drivemax.dto.EmployeeDto;
+import lk.ijse.javafx.drivemax.entity.Customer;
 import lk.ijse.javafx.drivemax.entity.Employee;
 import lk.ijse.javafx.drivemax.util.CrudUtil;
 
@@ -53,6 +54,28 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             return rs.getString("name");
         }
         return null;
+    }
+
+    @Override
+    public Optional<String> getLastEmployeeId() throws SQLException {
+        String sql = "SELECT e_id FROM employee ORDER BY e_id DESC LIMIT 1";
+        ResultSet rs = SQLUtil.execute(sql);
+
+        if (rs.next()) {
+            return Optional.of(rs.getString("e_id"));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean existsEmployeeByPhoneNumber(String phoneNumber) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM employee WHERE phone = ?", phoneNumber);
+//        if (resultSet.next()){
+//            return true;
+//        }
+//        return false;
+
+        return resultSet.next();
     }
 
     @Override
@@ -118,6 +141,17 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public Optional<Employee> findById(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM employee WHERE e_id = ?", id);
+        if (resultSet.next()) {
+            return Optional.of(new Employee(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getString(5),
+                    resultSet.getString(6)
+            ));
+        }
         return Optional.empty();
     }
 }

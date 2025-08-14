@@ -5,9 +5,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import lk.ijse.javafx.drivemax.model.CustomerModel;
-import lk.ijse.javafx.drivemax.model.EmployeeModel;
-import lk.ijse.javafx.drivemax.model.SupplierModel;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.CustomerBO;
+
+import lk.ijse.javafx.drivemax.bo.custom.EmployeeBO;
+import lk.ijse.javafx.drivemax.bo.custom.SupplierBO;
+
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -41,10 +45,9 @@ public class EmailPageController {
     @FXML
     private Button btnCansel;
 
-    private final CustomerModel customerModel = new CustomerModel();
-    private final EmployeeModel employeeModel = new EmployeeModel();
-    private final SupplierModel supplierModel = new SupplierModel();
-
+    private final CustomerBO customerBO = BOFactory.getInstance().getBO(BOTypes.CUSTOMER);
+    private final EmployeeBO employeeBO = BOFactory.getInstance().getBO(BOTypes.EMPLOYEE);
+    private final SupplierBO supplierBO = BOFactory.getInstance().getBO(BOTypes.SUPPLIER);
     @FXML
     public void initialize() {
 
@@ -57,13 +60,13 @@ public class EmailPageController {
 
             try {
                 switch (type) {
-                    case "Customer" -> ids.setAll(customerModel.getAllCustomerIds());
-                    case "Employee" -> ids.setAll(employeeModel.getAllEmployeeIds());
-                    case "Supplier" -> ids.setAll(supplierModel.getAllSupplierIds());
+                    case "Customer" -> ids.setAll(customerBO.getAllCustomerIds());
+                    case "Employee" -> ids.setAll(employeeBO.getAllEmployeeIds());
+                    case "Supplier" -> ids.setAll(supplierBO.getAllSupplierIds());
                 }
                 idCombo.setItems(ids);
                 emailField.clear();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Failed to load recipient IDs.");
                 e.printStackTrace();
             }
@@ -76,13 +79,13 @@ public class EmailPageController {
 
             try {
                 String email = switch (type) {
-                    case "Customer" -> customerModel.getCustomerEmailById(id);
-                    case "Employee" -> employeeModel.getEmployeeEmailById(id);
-                    case "Supplier" -> supplierModel.getSupplierEmailById(id);
+                    case "Customer" -> customerBO.getCustomerEmailById(id);
+                    case "Employee" -> employeeBO.getEmployeeEmailById(id);
+                    case "Supplier" -> supplierBO.getSupplierEmailById(id);
                     default -> "";
                 };
                 emailField.setText(email);
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Failed to load email address.");
                 e.printStackTrace();
             }

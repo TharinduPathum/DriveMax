@@ -8,10 +8,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.EmployeeBO;
+import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
+import lk.ijse.javafx.drivemax.bo.custom.SalaryBO;
 import lk.ijse.javafx.drivemax.dto.SalaryDto;
 import lk.ijse.javafx.drivemax.dto.tm.SalaryTM;
-import lk.ijse.javafx.drivemax.model.SalaryModel;
-import lk.ijse.javafx.drivemax.model.EmployeeModel;
+
+
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -31,8 +36,8 @@ public class SalaryPageController implements Initializable {
     public DatePicker datePicker;
     public Label empNameLabel;
 
-    private final SalaryModel salaryModel = new SalaryModel();
-    private final EmployeeModel employeeModel = new EmployeeModel();
+    private final SalaryBO salaryBO = BOFactory.getInstance().getBO(BOTypes.SALARY);
+    private final EmployeeBO employeeBO = BOFactory.getInstance().getBO(BOTypes.EMPLOYEE);
 
 
     @FXML private TableView<SalaryTM> salaryTable;
@@ -73,7 +78,7 @@ public class SalaryPageController implements Initializable {
         empIdComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 try {
-                    String empName = employeeModel.getEmployeeName(newVal);
+                    String empName = employeeBO.getEmployeeName(newVal);
                     empNameLabel.setText(empName != null ? empName : "Name not found");
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -104,7 +109,7 @@ public class SalaryPageController implements Initializable {
 
     private void loadTableData() throws SQLException {
 
-        ArrayList<SalaryDto> salaryDTOArrayList = salaryModel.getAllSalary();
+        ArrayList<SalaryDto> salaryDTOArrayList = salaryBO.getAllSalary();
         Collections.reverse(salaryDTOArrayList);
         ObservableList<SalaryTM> list = FXCollections.observableArrayList();
 
@@ -124,14 +129,14 @@ public class SalaryPageController implements Initializable {
     }
 
     private void loadNextId() throws SQLException {
-        String nextId = salaryModel.getNextId();
+        String nextId = salaryBO.getNextId();
         salIdValuelabel.setText(nextId);
 
 
 }
     private void loadEmployeeIds() {
         try {
-            ArrayList<String> ids = employeeModel.getAllEmployeeIds();
+            ArrayList<String> ids = employeeBO.getAllEmployeeIds();
             empIdComboBox.setItems(FXCollections.observableArrayList(ids));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -197,7 +202,7 @@ public class SalaryPageController implements Initializable {
                     date
             );
 
-            boolean isSave = salaryModel.saveSalary(salaryDto);
+            boolean isSave = salaryBO.saveSalary(salaryDto);
             if (isSave) {
                 loadNextId();
                 loadTableData();
@@ -223,7 +228,7 @@ public class SalaryPageController implements Initializable {
         String salaryId = salIdValuelabel.getText();
 
         try {
-            boolean isDeleted = salaryModel.deleteSalary(salaryId);
+            boolean isDeleted = salaryBO.deleteSalary(salaryId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -285,7 +290,7 @@ public class SalaryPageController implements Initializable {
         );
 
         try {
-            boolean isUpdated = salaryModel.updateSalary(salaryDto);
+            boolean isUpdated = salaryBO.updateSalary(salaryDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "salary updated successfully!").show();

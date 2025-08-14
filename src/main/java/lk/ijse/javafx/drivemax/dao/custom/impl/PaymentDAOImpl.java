@@ -85,4 +85,10 @@ public class PaymentDAOImpl implements PaymentDAO {
     public Optional<Payment> findById(String id) throws SQLException {
         return Optional.empty();
     }
+
+    @Override
+    public boolean existsInvoicesByPaymentId(String paymentId) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM payment WHERE p_id = ?",paymentId );
+        return resultSet.next();
+    }
 }

@@ -97,11 +97,24 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
+    public Optional<String> getLastCustomerId() throws SQLException {
+
+            String sql = "SELECT c_id FROM customer ORDER BY c_id DESC LIMIT 1";
+            ResultSet rs = SQLUtil.execute(sql);
+
+            if (rs.next()) {
+                return Optional.of(rs.getString("c_id"));
+            }
+            return Optional.empty();
+
+    }
+
+    @Override
     public boolean save(Customer customer) throws SQLException {
 
         return SQLUtil.execute(
                 "insert into customer(c_id, name, address, email, phone) values (?, ?, ?, ?, ?)",
-                customer.getId(),
+                customer.getCustomerId(),
                 customer.getName(),
                 customer.getAddress(),
                 customer.getEmail(),
@@ -119,7 +132,7 @@ public class CustomerDAOImpl implements CustomerDAO {
                 customer.getAddress(),
                 customer.getEmail(),
                 customer.getPhone(),
-                customer.getId()
+                customer.getCustomerId()
 
         );
     }

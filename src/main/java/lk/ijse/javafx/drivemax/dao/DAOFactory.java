@@ -15,7 +15,7 @@ public class DAOFactory {
 
     public <T extends SuperDAO> T getDAO(DAOTypes daoType) {
         return switch (daoType) {
-            case ATTENDANCE -> (T) new AttendanceBOImpl();
+            case ATTENDANCE -> (T) new AttendanceDAOImpl();
             case CUSTOMER -> (T) new CustomerDAOImpl();
             case EMPLOYEE -> (T) new EmployeeDAOImpl();
             case INVENTORY -> (T) new InventoryDAOImpl();

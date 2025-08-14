@@ -7,6 +7,7 @@ import lk.ijse.javafx.drivemax.bo.exception.NotFoundException;
 import lk.ijse.javafx.drivemax.dto.CustomerDto;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface CustomerBO extends SuperBO {
@@ -16,5 +17,11 @@ public interface CustomerBO extends SuperBO {
 
     boolean deleteCustomer(String id) throws InUseException, Exception;
 
-    void updateCustomer(CustomerDto customerDto) throws NotFoundException, Exception;
+    boolean updateCustomer(CustomerDto customerDto) throws NotFoundException, Exception;
+
+    String getNextId() throws Exception;
+
+    ArrayList<String> getAllCustomerIds() throws NotFoundException, Exception;
+
+    String getCustomerEmailById(String id) throws NotFoundException, Exception;
 }

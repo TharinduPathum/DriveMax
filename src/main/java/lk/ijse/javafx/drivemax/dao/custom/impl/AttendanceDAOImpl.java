@@ -4,6 +4,7 @@ import lk.ijse.javafx.drivemax.dao.SQLUtil;
 import lk.ijse.javafx.drivemax.dao.custom.AttendanceDAO;
 import lk.ijse.javafx.drivemax.dto.AttendanceDto;
 import lk.ijse.javafx.drivemax.entity.Attendance;
+import lk.ijse.javafx.drivemax.entity.Customer;
 import lk.ijse.javafx.drivemax.util.CrudUtil;
 
 import java.sql.ResultSet;
@@ -37,7 +38,7 @@ public class AttendanceDAOImpl implements AttendanceDAO {
     @Override
     public boolean save(Attendance attendance) throws SQLException {
         return SQLUtil.execute(
-                "INSERT INTO attendance (e_id, date, status) VALUES (?, ?, ?)",
+                "INSERT INTO attendance VALUES (?, ?, ?)",
                 attendance.getId(),
                 attendance.getDate(),
                 attendance.getStatus()
@@ -69,9 +70,21 @@ public class AttendanceDAOImpl implements AttendanceDAO {
     }
 
     @Override
-    public Optional<Attendance> findById(String id) throws SQLException {
+    public Optional<Attendance> findById(String empId) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM customer WHERE c_id = ?", empId);
+        if (resultSet.next()) {
+            return Optional.of(new Attendance(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3)
+            ));
+        }
         return Optional.empty();
     }
 
 
+    @Override
+    public boolean EmployeeStatusByDate(String date) throws SQLException {
+        return false;
+    }
 }

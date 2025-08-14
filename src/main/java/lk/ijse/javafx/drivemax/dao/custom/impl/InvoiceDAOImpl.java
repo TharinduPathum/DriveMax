@@ -79,4 +79,15 @@ public class InvoiceDAOImpl implements InvoiceDAO {
     public Optional<Invoice> findById(String id) throws SQLException {
         return Optional.empty();
     }
+
+    @Override
+    public Optional<String> getLastInvoiceId() throws SQLException {
+        String sql = "SELECT i_id FROM invoice ORDER BY i_id DESC LIMIT 1";
+        ResultSet rs = SQLUtil.execute(sql);
+
+        if (rs.next()) {
+            return Optional.of(rs.getString("i_id"));
+        }
+        return Optional.empty();
+    }
 }

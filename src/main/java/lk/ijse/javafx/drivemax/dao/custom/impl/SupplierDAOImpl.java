@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SupplierDAOImpl implements SupplierDAO {
+
     @Override
     public List<Supplier> getAll() throws SQLException {
         ResultSet resultSet = CrudUtil.execute("select * from supplier");

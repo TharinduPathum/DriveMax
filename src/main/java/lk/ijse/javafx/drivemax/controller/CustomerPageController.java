@@ -1,5 +1,6 @@
 package lk.ijse.javafx.drivemax.controller;
 
+import com.sun.mail.imap.protocol.ID;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,7 +14,6 @@ import lk.ijse.javafx.drivemax.bo.custom.CustomerBO;
 import lk.ijse.javafx.drivemax.db.DBConnection;
 import lk.ijse.javafx.drivemax.dto.CustomerDto;
 import lk.ijse.javafx.drivemax.dto.tm.CustomerTM;
-import lk.ijse.javafx.drivemax.model.CustomerModel;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -36,7 +36,7 @@ public class CustomerPageController implements Initializable {
     public TextField emailField;
     public TextField phoneNoField;
 
-    private final CustomerModel customerModel = new CustomerModel();
+
     private final CustomerBO customerBO = BOFactory.getInstance().getBO(BOTypes.CUSTOMER);
 
 
@@ -81,28 +81,21 @@ public class CustomerPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<CustomerDto> customerDTOArrayList = customerModel.getAllCustomer();
-
-        Collections.reverse(customerDTOArrayList);
-
-        ObservableList<CustomerTM> list = FXCollections.observableArrayList();
-        for (CustomerDto customerDto : customerDTOArrayList) {
-            CustomerTM customerTM = new CustomerTM(
-                    customerDto.getCustomerId(),
-                    customerDto.getName(),
-                    customerDto.getAddress(),
-                    customerDto.getEmail(),
-                    customerDto.getPhone()
-            );
-            list.add(customerTM);
-        }
-
-        customerTable.setItems(list);
+        customerTable.setItems(FXCollections.observableArrayList(
+                customerBO.getAllCustomer().stream().map(customerDTO ->
+                        new CustomerTM(
+                                customerDTO.getCustomerId(),
+                                customerDTO.getName(),
+                                customerDTO.getAddress(),
+                                customerDTO.getEmail(),
+                                customerDTO.getPhone()
+                        )).toList()
+        ));
     }
 
 
-    private void loadNextId() throws SQLException {
-        String nextId = customerModel.getNextId();
+    private void loadNextId() throws Exception {
+        String nextId = customerBO.getNextId();
         custidValueLabel.setText(nextId);
     }
 
@@ -200,7 +193,7 @@ public class CustomerPageController implements Initializable {
         String customerId = custidValueLabel.getText();
 
         try {
-            boolean isDeleted = customerModel.deleteCustomer(customerId);
+            boolean isDeleted = customerBO.deleteCustomer(customerId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -248,7 +241,7 @@ public class CustomerPageController implements Initializable {
    public void btnResetOnAction(ActionEvent event) {
         try {
             loadNextId();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -281,7 +274,7 @@ public class CustomerPageController implements Initializable {
         );
 
         try {
-            boolean isUpdated = customerModel.updateCustomer(customerDto);
+            boolean isUpdated = customerBO.updateCustomer(customerDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "Customer updated successfully!").show();

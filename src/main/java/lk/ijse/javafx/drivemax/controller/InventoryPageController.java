@@ -9,10 +9,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.CustomerBO;
+import lk.ijse.javafx.drivemax.bo.custom.InventoryBO;
 import lk.ijse.javafx.drivemax.db.DBConnection;
 import lk.ijse.javafx.drivemax.dto.InventoryDto;
+import lk.ijse.javafx.drivemax.dto.tm.CustomerTM;
 import lk.ijse.javafx.drivemax.dto.tm.InventoryTM;
-import lk.ijse.javafx.drivemax.model.InventoryModel;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -25,6 +29,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InventoryPageController implements Initializable {
 
@@ -36,7 +41,7 @@ public class InventoryPageController implements Initializable {
     public Label spidValueLabel;
     public TextField supIdField;
 
-    private final InventoryModel inventoryModel = new InventoryModel();
+    private final InventoryBO inventoryBO = BOFactory.getInstance().getBO(BOTypes.INVENTORY);
 
     public TableView<InventoryTM> sparePartTable;
     public TableColumn<InventoryTM, String> colSpId;
@@ -83,27 +88,23 @@ public class InventoryPageController implements Initializable {
 
 
     private void loadTableData() throws SQLException {
-        // 1. Long code
-        ArrayList<InventoryDto> inventoryDTOArrayList= inventoryModel.getAllSparePart();
-        Collections.reverse(inventoryDTOArrayList);
-        ObservableList<InventoryTM> list = FXCollections.observableArrayList();
+        sparePartTable.setItems(FXCollections.observableArrayList(
+                inventoryBO.getAllSparePart().stream()
+                        .map(inventoryDto -> new InventoryTM(
+                                inventoryDto.getSparePartId(),
+                                inventoryDto.getSupplierId(),
+                                inventoryDto.getBrand(),
+                                inventoryDto.getName(),
+                                inventoryDto.getAmount(),
+                                inventoryDto.getQuantity()
+                        ))
+                        .collect(Collectors.toList())
+        ));
 
-        for (InventoryDto inventoryDto : inventoryDTOArrayList){
-            InventoryTM inventoryTM = new InventoryTM(
-                    inventoryDto.getSparePartId(),
-                    inventoryDto.getSupplierId(),
-                    inventoryDto.getBrand(),
-                    inventoryDto.getName(),
-                    inventoryDto.getAmount(),
-                    inventoryDto.getQuantity()
-            );
-            list.add(inventoryTM);
-        }
-        sparePartTable.setItems(list);
     }
 
     private void loadNextId() throws SQLException {
-        String nextId = inventoryModel.getNextId();
+        String nextId = inventoryBO.getNextId();
         spidValueLabel.setText(nextId);
     }
 
@@ -166,7 +167,7 @@ public class InventoryPageController implements Initializable {
 
 
         try {
-            boolean isSave = inventoryModel.saveSparePart(inventoryDto);
+            boolean isSave = inventoryBO.saveSparepart(inventoryDto);
             if (isSave) {
                 loadNextId();
                 loadTableData();
@@ -209,7 +210,7 @@ public class InventoryPageController implements Initializable {
         String sparePartId = spidValueLabel.getText();
 
         try {
-            boolean isDeleted = inventoryModel.deleteSparePart(sparePartId);
+            boolean isDeleted = inventoryBO.deleteSparepart(sparePartId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -272,7 +273,7 @@ public class InventoryPageController implements Initializable {
         InventoryDto inventoryDto = new InventoryDto(sparePartId, supplierId, brand, name, amount, quantity);
 
         try {
-            boolean isUpdated = inventoryModel.updateSparePart(inventoryDto);
+            boolean isUpdated = inventoryBO.updateSparepart(inventoryDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "Spare part updated successfully..!").show();

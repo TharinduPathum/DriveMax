@@ -3,6 +3,7 @@ package lk.ijse.javafx.drivemax.dao.custom.impl;
 import lk.ijse.javafx.drivemax.dao.SQLUtil;
 import lk.ijse.javafx.drivemax.dao.custom.InventoryDAO;
 import lk.ijse.javafx.drivemax.dto.InventoryDto;
+import lk.ijse.javafx.drivemax.entity.Employee;
 import lk.ijse.javafx.drivemax.entity.Inventory;
 import lk.ijse.javafx.drivemax.util.CrudUtil;
 
@@ -95,6 +96,28 @@ public class InventoryDAOImpl implements InventoryDAO {
 
     @Override
     public Optional<Inventory> findById(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM inventory WHERE sp_id = ?", id);
+        if (resultSet.next()) {
+            return Optional.of(new Inventory(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getString(5),
+                    resultSet.getString(6)
+            ));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<String> getLastInventoryId() throws SQLException {
+        String sql = "SELECT sp_id FROM inventory ORDER BY sp_id DESC LIMIT 1";
+        ResultSet rs = SQLUtil.execute(sql);
+
+        if (rs.next()) {
+            return Optional.of(rs.getString("sp_id"));
+        }
         return Optional.empty();
     }
 }

@@ -8,10 +8,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.EmployeeBO;
+import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
+import lk.ijse.javafx.drivemax.bo.custom.OTBO;
 import lk.ijse.javafx.drivemax.dto.OTDto;
 import lk.ijse.javafx.drivemax.dto.tm.OTTM;
-import lk.ijse.javafx.drivemax.model.EmployeeModel;
-import lk.ijse.javafx.drivemax.model.OTModel;
+
+
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -43,8 +48,8 @@ public class OTPageController implements Initializable {
     @FXML
     public AnchorPane ancPane;
 
-    private final OTModel otModel = new OTModel();
-    private final EmployeeModel employeeModel = new EmployeeModel();
+    private final OTBO otbo = BOFactory.getInstance().getBO(BOTypes.OT);
+    private final EmployeeBO employeeBO = BOFactory.getInstance().getBO(BOTypes.EMPLOYEE);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -78,7 +83,7 @@ public class OTPageController implements Initializable {
         empIdComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 try {
-                    String empName = employeeModel.getEmployeeName(newVal);
+                    String empName = employeeBO.getEmployeeName(newVal);
                     empNameLabel.setText(empName != null ? empName : "Name not found");
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -92,7 +97,7 @@ public class OTPageController implements Initializable {
 
     private void loadEmployeeIds() {
         try {
-            ArrayList<String> ids = employeeModel.getAllEmployeeIds();
+            ArrayList<String> ids = employeeBO.getAllEmployeeIds();
             empIdComboBox.setItems(FXCollections.observableArrayList(ids));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,7 +106,7 @@ public class OTPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<OTDto> otList = otModel.getAllOT();
+        ArrayList<OTDto> otList = otbo.getAllOT();
         Collections.reverse(otList);
         ObservableList<OTTM> observableList = FXCollections.observableArrayList();
 
@@ -125,7 +130,7 @@ public class OTPageController implements Initializable {
         OTDto dto = new OTDto(empId, date, hours);
 
         try {
-            boolean isSaved = otModel.saveOT(dto);
+            boolean isSaved = otbo.saveOT(dto);
             if (isSaved) {
                 loadTableData();
                 btnResetOnAction(null);
@@ -144,7 +149,7 @@ public class OTPageController implements Initializable {
         String date = datePicker.getValue().toString();
 
         try {
-            boolean isDeleted = otModel.deleteOT(empId, date);
+            boolean isDeleted = otbo.deleteOT(empId, date);
             if (isDeleted) {
                 loadTableData();
                 btnResetOnAction(null);
@@ -166,7 +171,7 @@ public class OTPageController implements Initializable {
         OTDto dto = new OTDto(empId, date, hours);
 
         try {
-            boolean isUpdated = otModel.updateOT(dto);
+            boolean isUpdated = otbo.updateOT(dto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "OT updated successfully!").show();

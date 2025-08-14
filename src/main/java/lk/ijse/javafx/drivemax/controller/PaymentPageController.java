@@ -8,9 +8,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.javafx.drivemax.bo.BOFactory;
+import lk.ijse.javafx.drivemax.bo.BOTypes;
+import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
+import lk.ijse.javafx.drivemax.bo.custom.PaymentBO;
 import lk.ijse.javafx.drivemax.dto.PaymentDto;
 import lk.ijse.javafx.drivemax.dto.tm.PaymentTM;
-import lk.ijse.javafx.drivemax.model.PaymentModel;
+
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -27,7 +31,7 @@ public class PaymentPageController implements Initializable {
     public TableColumn<PaymentTM, String> colAmount;
     public TableColumn<PaymentTM, String> colDate;
 
-    private final PaymentModel paymentModel = new PaymentModel();
+    private final PaymentBO paymentBO = BOFactory.getInstance().getBO(BOTypes.PAYMENT);
 
     public DatePicker datePicker;
     public TextField cusIdField;
@@ -66,7 +70,7 @@ public class PaymentPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<PaymentDto> paymentDTOArrayList = paymentModel.getAllPayments();
+        ArrayList<PaymentDto> paymentDTOArrayList = paymentBO.getAllPayments();
 
         Collections.reverse(paymentDTOArrayList);
 
@@ -86,7 +90,7 @@ public class PaymentPageController implements Initializable {
 
 
     private void loadNextId() throws SQLException {
-        String nextId = paymentModel.getNextId();
+        String nextId = paymentBO.getNextId();
         payIdValueLabel.setText(nextId);
     }
 
@@ -143,7 +147,7 @@ public class PaymentPageController implements Initializable {
         );
 
         try {
-            boolean isSave = paymentModel.savePayment(paymentDto);
+            boolean isSave = paymentBO.savePayment(paymentDto);
             if (isSave) {
                 loadNextId();
                 loadTableData();
@@ -177,7 +181,7 @@ public class PaymentPageController implements Initializable {
         String paymentId = payIdValueLabel.getText();
 
         try {
-            boolean isDeleted = paymentModel.deletePayment(paymentId);
+            boolean isDeleted = paymentBO.deletePayment(paymentId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -226,7 +230,7 @@ public class PaymentPageController implements Initializable {
         );
 
         try {
-            boolean isUpdated = paymentModel.updatePayment(paymentDto);
+            boolean isUpdated = paymentBO.updatePayment(paymentDto);
             if (isUpdated) {
                 loadTableData();
                 new Alert(Alert.AlertType.INFORMATION, "payment updated successfully!").show();
