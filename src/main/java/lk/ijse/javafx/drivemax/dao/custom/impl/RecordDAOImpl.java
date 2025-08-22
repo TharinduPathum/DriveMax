@@ -1,9 +1,12 @@
 package lk.ijse.javafx.drivemax.dao.custom.impl;
 
+import lk.ijse.javafx.drivemax.bo.exception.NotFoundException;
 import lk.ijse.javafx.drivemax.dao.SQLUtil;
 import lk.ijse.javafx.drivemax.dao.custom.RecordDAO;
 import lk.ijse.javafx.drivemax.dto.RecordDto;
+import lk.ijse.javafx.drivemax.entity.Customer;
 import lk.ijse.javafx.drivemax.entity.Record;
+import lk.ijse.javafx.drivemax.entity.Repair;
 import lk.ijse.javafx.drivemax.util.CrudUtil;
 
 import java.sql.ResultSet;
@@ -91,6 +94,28 @@ public class RecordDAOImpl implements RecordDAO {
 
     @Override
     public Optional<Record> findById(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM record WHERE rec_id = ?", id);
+        if (resultSet.next()) {
+            return Optional.of(new Record(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4)
+            ));
+        }
         return Optional.empty();
     }
+
+    @Override
+    public Optional<String> getLastRecordId() throws SQLException {
+        String sql = "SELECT rec_id FROM record ORDER BY rec_id DESC LIMIT 1";
+        ResultSet rs = SQLUtil.execute(sql);
+
+        if (rs.next()) {
+            return Optional.of(rs.getString("rec_id"));
+        }
+        return Optional.empty();
+    }
+
+
 }

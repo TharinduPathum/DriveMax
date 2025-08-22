@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class VehicleDAOImpl implements VehicleDAO {
+public class .VehicleDAOImpl implements VehicleDAO {
     @Override
     public List<Vehicle> getAll() throws SQLException {
         ResultSet resultSet = SQLUtil.execute("select * from vehicle");
@@ -104,5 +104,16 @@ public class VehicleDAOImpl implements VehicleDAO {
     public boolean existVehiclesByCustomerId(String vehicleId) throws SQLException {
         ResultSet resultSet = SQLUtil.execute("SELECT * FROM vehicle WHERE v_id = ?",vehicleId );
         return resultSet.next();
+    }
+
+    @Override
+    public Optional<String> getLastVehicleId() throws SQLException {
+        String sql = "SELECT v_id FROM vehicle ORDER BY v_id DESC LIMIT 1";
+        ResultSet rs = SQLUtil.execute(sql);
+
+        if (rs.next()) {
+            return Optional.of(rs.getString("v_id"));
+        }
+        return Optional.empty();
     }
 }

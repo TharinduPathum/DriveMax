@@ -88,18 +88,23 @@ public class InventoryPageController implements Initializable {
 
 
     private void loadTableData() throws SQLException {
+
+
         sparePartTable.setItems(FXCollections.observableArrayList(
                 inventoryBO.getAllSparePart().stream()
-                        .map(inventoryDto -> new InventoryTM(
-                                inventoryDto.getSparePartId(),
+                        .map(inventoryDto ->
+                                new InventoryTM(
+                                inventoryDto.getSpId(),
                                 inventoryDto.getSupplierId(),
                                 inventoryDto.getBrand(),
                                 inventoryDto.getName(),
                                 inventoryDto.getAmount(),
                                 inventoryDto.getQuantity()
-                        ))
-                        .collect(Collectors.toList())
+                        )).toList()
+
+
         ));
+
 
     }
 
@@ -148,7 +153,7 @@ public class InventoryPageController implements Initializable {
 
         if (!isValid()) return;
 
-        String sparePartId = spidValueLabel.getText();
+        String spId = spidValueLabel.getText();
         String supplierId = supIdField.getText();
         String brand = brandField.getText();
         String name = nameField.getText();
@@ -157,7 +162,7 @@ public class InventoryPageController implements Initializable {
 
 
         InventoryDto inventoryDto = new InventoryDto(
-                sparePartId,
+                spId,
                 supplierId,
                 brand,
                 name,
@@ -207,10 +212,10 @@ public class InventoryPageController implements Initializable {
 
 
     public void btnDeleteOnAction(ActionEvent event) {
-        String sparePartId = spidValueLabel.getText();
+        String spId = spidValueLabel.getText();
 
         try {
-            boolean isDeleted = inventoryBO.deleteSparepart(sparePartId);
+            boolean isDeleted = inventoryBO.deleteSparepart(spId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -263,14 +268,14 @@ public class InventoryPageController implements Initializable {
 
         if (!isValid()) return;
 
-        String sparePartId = spidValueLabel.getText();
+        String spId = spidValueLabel.getText();
         String supplierId = supIdField.getText();
         String brand = brandField.getText();
         String name = nameField.getText();
         String amount = amountField.getText();
         String quantity = quantityField.getText();
 
-        InventoryDto inventoryDto = new InventoryDto(sparePartId, supplierId, brand, name, amount, quantity);
+        InventoryDto inventoryDto = new InventoryDto(spId, supplierId, brand, name, amount, quantity);
 
         try {
             boolean isUpdated = inventoryBO.updateSparepart(inventoryDto);

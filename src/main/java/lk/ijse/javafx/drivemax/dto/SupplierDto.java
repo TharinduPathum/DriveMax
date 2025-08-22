@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @ToString
 public class SupplierDto {
-    private String supplierId;
+    private String id;
     private String name;
     private String address;
     private String email;

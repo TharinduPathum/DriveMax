@@ -20,7 +20,7 @@ public interface EmployeeBO extends SuperBO {
 
     boolean saveEmployee(EmployeeDto employeeDto) throws SQLException;
 
-    boolean updateEmployee(EmployeeDto employeeDto) throws SQLException;
+    boolean updateEmployee(EmployeeDto employeeDto) throws Exception;
 
     boolean deleteEmployee(String empId) throws SQLException;
 }

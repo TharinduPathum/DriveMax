@@ -9,11 +9,12 @@ import lk.ijse.javafx.drivemax.entity.Supplier;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public interface SupplierBO extends SuperBO {
 
-    ArrayList<SupplierDto> getAllSupplier() throws SQLException;
+    List<SupplierDto> getAllSupplier() throws SQLException;
 
     String getNextId() throws SQLException;
 

@@ -15,6 +15,7 @@ import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
 import lk.ijse.javafx.drivemax.bo.custom.RecordBO;
 import lk.ijse.javafx.drivemax.bo.custom.RepairBO;
 import lk.ijse.javafx.drivemax.dto.RepairDto;
+import lk.ijse.javafx.drivemax.dto.tm.CustomerTM;
 import lk.ijse.javafx.drivemax.dto.tm.RepairTM;
 
 
@@ -82,24 +83,19 @@ public class RepairPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<RepairDto> repairDTOArrayList = repairBO.getAllRepairs();
 
-        Collections.reverse(repairDTOArrayList);
+        repairTable.setItems(FXCollections.observableArrayList(
+                repairBO.getAllRepairs().stream().map(repairDto ->
+                        new RepairTM(
+                                repairDto.getRepId(),
+                                repairDto.getVehicleId(),
+                                repairDto.getEmployeeId(),
+                                repairDto.getWork(),
+                                repairDto.getCost(),
+                                repairDto.getDate()
+                        )).toList()
+        ));
 
-        ObservableList<RepairTM> list = FXCollections.observableArrayList();
-        for (RepairDto repairDto : repairDTOArrayList) {
-            RepairTM repairTM = new RepairTM(
-                    repairDto.getRepairId(),
-                    repairDto.getVehicleId(),
-                    repairDto.getEmployeeId(),
-                    repairDto.getWork(),
-                    repairDto.getCost(),
-                    repairDto.getDate()
-            );
-            list.add(repairTM);
-        }
-
-        repairTable.setItems(list);
     }
 
 
@@ -149,7 +145,7 @@ public class RepairPageController implements Initializable {
 
         if (!isValid()) return;
 
-        String repairId = repidValueLabel.getText();
+        String repId = repidValueLabel.getText();
         String vehicleId = vehIdField.getText();
         String employeeId = empField.getText();
         String work = workField.getText();
@@ -157,7 +153,7 @@ public class RepairPageController implements Initializable {
         String date = datePicker.getValue().toString();
 
         RepairDto repairDto = new RepairDto(
-                repairId,
+                repId,
                 vehicleId,
                 employeeId,
                 work,
@@ -199,10 +195,10 @@ public class RepairPageController implements Initializable {
 
 
     public void btnDeleteOnAction(ActionEvent event) {
-        String repairId = repidValueLabel.getText();
+        String repId = repidValueLabel.getText();
 
         try {
-            boolean isDeleted = repairBO.deleteRepair(repairId);
+            boolean isDeleted = repairBO.deleteRepair(repId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -240,7 +236,7 @@ public class RepairPageController implements Initializable {
 
         if (!isValid()) return;
 
-        String repairId = repidValueLabel.getText();
+        String repId = repidValueLabel.getText();
         String vehicleId = vehIdField.getText();
         String employeeId = empField.getText();
         String work = workField.getText();
@@ -248,7 +244,7 @@ public class RepairPageController implements Initializable {
         String date = datePicker.getValue().toString();
 
         RepairDto repairDto = new RepairDto(
-                repairId,
+                repId,
                 vehicleId,
                 employeeId,
                 work,

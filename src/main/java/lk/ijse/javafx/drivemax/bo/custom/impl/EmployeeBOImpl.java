@@ -44,7 +44,7 @@ public class EmployeeBOImpl implements EmployeeBO {
         ArrayList<String> idList = (ArrayList<String>) employeeDAO.getAllIds();
 
         if (idList.isEmpty()) {
-            throw new NotFoundException("No employees found..!");
+            throw new SQLException("No employees found..!");
         }
 
         return idList;
@@ -91,14 +91,14 @@ public class EmployeeBOImpl implements EmployeeBO {
     }
 
     @Override
-    public boolean saveEmployee(EmployeeDto employeeDto) throws DuplicateException, SQLException {
-        Optional<Employee> optionalEmployee = employeeDAO.findById(employeeDto.getEmployeeId());
+    public boolean saveEmployee(EmployeeDto employeeDto) throws SQLException {
+        Optional<Employee> optionalEmployee = employeeDAO.findById(employeeDto.getId());
         if (optionalEmployee.isPresent()) {
-            throw new DuplicateException("Duplicate employee id");
+            throw new SQLException("Duplicate employee id");
         }
 
         if (employeeDAO.existsEmployeeByPhoneNumber(employeeDto.getPhone())) {
-            throw new DuplicateException("Duplicate employee phone number");
+            throw new SQLException("Duplicate employee phone number");
         }
 
         Employee employee = EntityDTOConverter.convert(employeeDto, Employee.class);
@@ -107,10 +107,10 @@ public class EmployeeBOImpl implements EmployeeBO {
     }
 
     @Override
-    public boolean updateEmployee(EmployeeDto employeeDto) throws NotFoundException, SQLException {
-        Optional<Employee> optionalEmployee = employeeDAO.findById(employeeDto.getEmployeeId());
+    public boolean updateEmployee(EmployeeDto employeeDto) throws Exception {
+        Optional<Employee> optionalEmployee = employeeDAO.findById(employeeDto.getId());
         if (optionalEmployee.isEmpty()) {
-            throw new NotFoundException("Employee not found");
+            throw new Exception("Employee not found");
         }
 
         Employee employee = EntityDTOConverter.convert(employeeDto, Employee.class);
@@ -120,14 +120,14 @@ public class EmployeeBOImpl implements EmployeeBO {
     }
 
     @Override
-    public boolean deleteEmployee(String id) throws InUseException, SQLException {
+    public boolean deleteEmployee(String id) throws SQLException {
         Optional<Employee> optionalEmployee = employeeDAO.findById(id);
         if (optionalEmployee.isEmpty()) {
-            throw new NotFoundException("Employee not found..!");
+           throw new SQLException("Employee not found..!");
         }
 
         if (repairDAO.existRepairsByEmployeeId(id)) {
-            throw new InUseException("Employee has repairs");
+           throw new SQLException("Employee has repairs");
         }
 
         try {

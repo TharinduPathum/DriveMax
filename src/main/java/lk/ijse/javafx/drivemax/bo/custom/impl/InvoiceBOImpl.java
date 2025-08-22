@@ -30,7 +30,7 @@ public class InvoiceBOImpl implements InvoiceBO {
 
     @Override
     public boolean saveInvoice(InvoiceDto invoiceDto) throws DuplicateException, SQLException {
-        Optional<Invoice> optionalInvoice = invoiceDAO.findById(invoiceDto.getInvoiceId());
+        Optional<Invoice> optionalInvoice = invoiceDAO.findById(invoiceDto.getInvId());
         if (optionalInvoice.isPresent()) {
             throw new DuplicateException("Duplicate invoice id");
         }
@@ -85,7 +85,7 @@ public class InvoiceBOImpl implements InvoiceBO {
 
     @Override
     public boolean updateInvoice(InvoiceDto invoiceDto) throws NotFoundException, SQLException {
-        Optional<Invoice> optionalInvoice = invoiceDAO.findById(invoiceDto.getCustomerId());
+        Optional<Invoice> optionalInvoice = invoiceDAO.findById(invoiceDto.getInvId());
         if (optionalInvoice.isEmpty()) {
             throw new NotFoundException("Invoice not found");
         }

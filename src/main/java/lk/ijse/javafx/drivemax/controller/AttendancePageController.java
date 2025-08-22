@@ -95,7 +95,7 @@ public class AttendancePageController implements Initializable {
         attendanceTable.setItems(FXCollections.observableArrayList(
                 attendanceBO.getAllAttendance().stream().map(attendanceDto ->
                         new AttendanceTM(
-                                attendanceDto.getEmpId(),
+                                attendanceDto.getId(),
                                 attendanceDto.getDate(),
                                 attendanceDto.getStatus()
 

@@ -8,10 +8,11 @@ import lk.ijse.javafx.drivemax.dto.RecordDto;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface RecordBO extends SuperBO {
 
-    ArrayList<RecordDto> getAllRecords() throws SQLException;
+    List<RecordDto> getAllRecords() throws SQLException;
 
     String getNextId() throws SQLException;
 

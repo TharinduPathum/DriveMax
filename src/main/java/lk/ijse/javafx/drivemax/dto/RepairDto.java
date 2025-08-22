@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @ToString
 public class RepairDto {
-    private String repairId;
+    private String repId;
     private String vehicleId;
     private String employeeId;
     private String work;

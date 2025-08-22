@@ -4,6 +4,7 @@ import lk.ijse.javafx.drivemax.dao.SQLUtil;
 import lk.ijse.javafx.drivemax.dao.custom.SparepartDAO;
 import lk.ijse.javafx.drivemax.db.DBConnection;
 import lk.ijse.javafx.drivemax.dto.SparepartDto;
+import lk.ijse.javafx.drivemax.entity.Employee;
 import lk.ijse.javafx.drivemax.entity.Sparepart;
 import lk.ijse.javafx.drivemax.util.CrudUtil;
 
@@ -83,48 +84,30 @@ public class SparepartDAOImpl implements SparepartDAO {
 
     @Override
     public Optional<Sparepart> findById(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM sparepart WHERE sp_id = ?", id);
+        if (resultSet.next()) {
+            return Optional.of(new Sparepart(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3)
+            ));
+        }
+        return Optional.empty();
+
+    }
+
+
+
+    @Override
+    public Optional<String> getLastSparepartId() throws SQLException {
+        String sql = "SELECT sp_id FROM sparepart ORDER BY sp_id DESC LIMIT 1";
+        ResultSet rs = SQLUtil.execute(sql);
+
+        if (rs.next()) {
+            return Optional.of(rs.getString("sp_id"));
+        }
         return Optional.empty();
     }
 
-    @Override
-    public boolean saveSparePartUsageWithInventoryUpdate(Sparepart sparepart) throws SQLException {
-        Connection conn = DBConnection.getInstance().getConnection();
 
-        try {
-            conn.setAutoCommit(false);
-
-            boolean isInserted = SQLUtil.execute(
-                    "INSERT INTO sparepart VALUES (?, ?, ?)",
-                    sparepart.getSpId(),
-                    sparepart.getRepair(),
-                    sparepart.getDate()
-            );
-
-            if (!isInserted) {
-                conn.rollback();
-                return false;
-            }
-
-            boolean isUpdated = SQLUtil.execute(
-                    "UPDATE inventory SET quantity = quantity - 1 WHERE sp_id = ? AND quantity > 0",
-                    sparepart.getSpId()
-            );
-
-            if (!isUpdated) {
-                conn.rollback();
-                return false;
-            }
-
-            conn.commit();
-            return true;
-
-        } catch (SQLException e) {
-            conn.rollback();
-            e.printStackTrace();
-            return false;
-        } finally {
-            conn.setAutoCommit(true);
-        }
-
-    }
 }

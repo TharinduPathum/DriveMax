@@ -103,7 +103,7 @@ public class InvoicePageController implements Initializable {
         ObservableList<InvoiceTM> observableList = FXCollections.observableArrayList();
         for (InvoiceDto invoiceDto: list) {
             observableList.add(new InvoiceTM(
-                    invoiceDto.getInvoiceId(),
+                    invoiceDto.getInvId(),
                     invoiceDto.getPaymentId(),
                     invoiceDto.getCustomerId(),
                     invoiceDto.getDescription(),

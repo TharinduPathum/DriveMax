@@ -28,7 +28,7 @@ public class InventoryBOImpl implements InventoryBO {
     @Override
     public List<InventoryDto> getAllSparePart() throws SQLException {
         List<Inventory> inventories = inventoryDAO.getAll();
-        ArrayList<InventoryDto> inventoryDtos = new ArrayList<>();
+        List<InventoryDto> inventoryDtos = new ArrayList<>();
         for (Inventory inventory : inventories) {
             inventoryDtos.add(EntityDTOConverter.convert(inventory, InventoryDto.class));
         }
@@ -53,7 +53,7 @@ public class InventoryBOImpl implements InventoryBO {
 
     @Override
     public boolean saveSparepart(InventoryDto inventoryDto) throws DuplicateException, SQLException {
-        Optional<Inventory> optionalInventory = inventoryDAO.findById(inventoryDto.getSparePartId());
+        Optional<Inventory> optionalInventory = inventoryDAO.findById(inventoryDto.getSpId());
         if (optionalInventory.isPresent()) {
             throw new DuplicateException("Duplicate sparepart id");
         }
@@ -65,7 +65,7 @@ public class InventoryBOImpl implements InventoryBO {
 
     @Override
     public boolean updateSparepart(InventoryDto inventoryDto) throws NotFoundException, SQLException {
-        Optional<Inventory> optionalEmployee = inventoryDAO.findById(inventoryDto.getSparePartId());
+        Optional<Inventory> optionalEmployee = inventoryDAO.findById(inventoryDto.getSpId());
         if (optionalEmployee.isEmpty()) {
             throw new NotFoundException("sparepart not found");
         }

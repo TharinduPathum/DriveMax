@@ -38,11 +38,11 @@ public class CustomerBOImpl implements CustomerBO {
     public boolean saveCustomer(CustomerDto customerDto) throws DuplicateException, Exception {
         Optional<Customer> optionalCustomer = customerDAO.findById(customerDto.getCustomerId());
         if (optionalCustomer.isPresent()) {
-            throw new DuplicateException("Duplicate customer id");
+            throw new Exception("Duplicate customer id");
         }
 
         if (customerDAO.existsCustomerByPhoneNumber(customerDto.getPhone())) {
-            throw new DuplicateException("Duplicate customer phone number");
+            throw new Exception("Duplicate customer phone number");
         }
 
         Customer customer = EntityDTOConverter.convert(customerDto, Customer.class);
@@ -54,11 +54,11 @@ public class CustomerBOImpl implements CustomerBO {
     public boolean deleteCustomer(String id) throws InUseException, Exception {
         Optional<Customer> optionalCustomer = customerDAO.findById(id);
         if (optionalCustomer.isEmpty()) {
-            throw new NotFoundException("Customer not found..!");
+            throw new Exception("Customer not found..!");
         }
 
         if (vehicleDAO.existVehiclesByCustomerId(id)) {
-            throw new InUseException("Customer has vehicles");
+            throw new Exception("Customer has vehicles");
         }
 
         try {
@@ -72,7 +72,7 @@ public class CustomerBOImpl implements CustomerBO {
     public boolean updateCustomer(CustomerDto customerDto) throws NotFoundException, Exception {
         Optional<Customer> optionalCustomer = customerDAO.findById(customerDto.getCustomerId());
         if (optionalCustomer.isEmpty()) {
-            throw new NotFoundException("Customer not found");
+            throw new Exception("Customer not found");
         }
 
         Customer customer = EntityDTOConverter.convert(customerDto, Customer.class);

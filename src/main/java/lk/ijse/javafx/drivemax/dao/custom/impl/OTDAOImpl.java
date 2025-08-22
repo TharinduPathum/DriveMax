@@ -2,6 +2,7 @@ package lk.ijse.javafx.drivemax.dao.custom.impl;
 
 import lk.ijse.javafx.drivemax.dao.SQLUtil;
 import lk.ijse.javafx.drivemax.dao.custom.OTDAO;
+import lk.ijse.javafx.drivemax.entity.Employee;
 import lk.ijse.javafx.drivemax.entity.OT;
 
 import java.sql.ResultSet;
@@ -25,6 +26,17 @@ public class OTDAOImpl implements OTDAO {
             );
         }
         return list;
+    }
+
+    @Override
+    public boolean existsOTsByEmployeeId(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM overtimework WHERE e_id = ?", id);
+//        if (resultSet.next()){
+//            return true;
+//        }
+//        return false;
+
+        return resultSet.next();
     }
 
     @Override
@@ -57,6 +69,14 @@ public class OTDAOImpl implements OTDAO {
 
     @Override
     public Optional<OT> findById(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM overtimework WHERE e_id = ?", id);
+        if (resultSet.next()) {
+            return Optional.of(new OT(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3)
+            ));
+        }
         return Optional.empty();
     }
 

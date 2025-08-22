@@ -82,7 +82,7 @@ public class EmployeePageController implements Initializable {
         employeeTable.setItems(FXCollections.observableArrayList(
                 employeeBO.getAllEmployee().stream().map(employeeDTO ->
                         new EmployeeTM(
-                                employeeDTO.getEmployeeId(),
+                                employeeDTO.getId(),
                                 employeeDTO.getName(),
                                 employeeDTO.getSpeciality(),
                                 employeeDTO.getAddress(),
@@ -160,8 +160,9 @@ public class EmployeePageController implements Initializable {
 
 
         try {
-            boolean isSave = employeeBO.saveEmployee(employeeDto);
-            if (isSave) {
+
+
+            if (employeeBO.saveEmployee(employeeDto)) {
                 loadNextId();
                 loadTableData();
 

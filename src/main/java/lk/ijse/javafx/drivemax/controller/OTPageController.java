@@ -14,6 +14,7 @@ import lk.ijse.javafx.drivemax.bo.custom.EmployeeBO;
 import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
 import lk.ijse.javafx.drivemax.bo.custom.OTBO;
 import lk.ijse.javafx.drivemax.dto.OTDto;
+import lk.ijse.javafx.drivemax.dto.tm.CustomerTM;
 import lk.ijse.javafx.drivemax.dto.tm.OTTM;
 
 
@@ -106,15 +107,14 @@ public class OTPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<OTDto> otList = otbo.getAllOT();
-        Collections.reverse(otList);
-        ObservableList<OTTM> observableList = FXCollections.observableArrayList();
-
-        for (OTDto dto : otList) {
-            observableList.add(new OTTM(dto.getEmpId(), dto.getDate(), dto.getHours()));
-        }
-
-        otTable.setItems(observableList);
+        otTable.setItems(FXCollections.observableArrayList(
+                otbo.getAllOT().stream().map(otDto ->
+                        new OTTM(
+                                otDto.getEmpId(),
+                                otDto.getDate(),
+                                otDto.getHours()
+                        )).toList()
+        ));
     }
 
     public void BtnSaveOnAction(ActionEvent actionEvent) {

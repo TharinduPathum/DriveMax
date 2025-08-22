@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @ToString
 public class RecordDto {
-    private String recordId;
+    private String recId;
     private String vehicleId;
     private String description;
     private String date;

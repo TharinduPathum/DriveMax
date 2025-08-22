@@ -8,6 +8,7 @@ import lk.ijse.javafx.drivemax.dto.InventoryDto;
 import lk.ijse.javafx.drivemax.entity.Inventory;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface InventoryBO extends SuperBO {

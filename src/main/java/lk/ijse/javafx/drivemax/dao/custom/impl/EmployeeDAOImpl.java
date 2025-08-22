@@ -5,7 +5,6 @@ import lk.ijse.javafx.drivemax.dao.custom.EmployeeDAO;
 import lk.ijse.javafx.drivemax.dto.EmployeeDto;
 import lk.ijse.javafx.drivemax.entity.Customer;
 import lk.ijse.javafx.drivemax.entity.Employee;
-import lk.ijse.javafx.drivemax.util.CrudUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -96,7 +95,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public boolean save(Employee employee) throws SQLException {
         return SQLUtil.execute(
-                "insert into employee values (?,?,?,?,?,?)",
+                "insert into employee (e_id, name, speciality, address, email, phone) values (?,?,?,?,?,?)",
                 employee.getId(),
                 employee.getName(),
                 employee.getSpeciality(),

@@ -3,6 +3,7 @@ package lk.ijse.javafx.drivemax.dao.custom.impl;
 import lk.ijse.javafx.drivemax.dao.SQLUtil;
 import lk.ijse.javafx.drivemax.dao.custom.SupplierDAO;
 import lk.ijse.javafx.drivemax.dto.SupplierDto;
+import lk.ijse.javafx.drivemax.entity.Employee;
 import lk.ijse.javafx.drivemax.entity.Supplier;
 import lk.ijse.javafx.drivemax.util.CrudUtil;
 
@@ -103,7 +104,18 @@ public class SupplierDAOImpl implements SupplierDAO {
 
     @Override
     public Optional<Supplier> findById(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM supplier WHERE sup_id = ?", id);
+        if (resultSet.next()) {
+            return Optional.of(new Supplier(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getString(5)
+            ));
+        }
         return Optional.empty();
+
     }
 
     @Override
@@ -116,5 +128,16 @@ public class SupplierDAOImpl implements SupplierDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public Optional<String> getLastSupplierId() throws SQLException {
+        String sql = "SELECT sup_id FROM supplier ORDER BY sup_id DESC LIMIT 1";
+        ResultSet rs = SQLUtil.execute(sql);
+
+        if (rs.next()) {
+            return Optional.of(rs.getString("sup_id"));
+        }
+        return Optional.empty();
     }
 }

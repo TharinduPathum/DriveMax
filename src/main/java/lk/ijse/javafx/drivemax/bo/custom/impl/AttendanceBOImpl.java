@@ -42,7 +42,7 @@ public class AttendanceBOImpl implements AttendanceBO {
 
     @Override
     public boolean saveAttendance(AttendanceDto dto) throws DuplicateException, Exception {
-        Optional<Attendance> optionalAttendance = attendanceDAO.findById(dto.getEmpId());
+        Optional<Attendance> optionalAttendance = attendanceDAO.findById(dto.getId());
         if (optionalAttendance.isPresent()) {
             throw new DuplicateException("Duplicate customer id");
         }
@@ -68,7 +68,7 @@ public class AttendanceBOImpl implements AttendanceBO {
 
     @Override
     public boolean updateAttendance(AttendanceDto dto) throws NotFoundException, Exception {
-        Optional<Attendance> optionalAttendance = attendanceDAO.findById(dto.getEmpId());
+        Optional<Attendance> optionalAttendance = attendanceDAO.findById(dto.getId());
         if (optionalAttendance.isEmpty()) {
             throw new NotFoundException("Employee not attended");
         }

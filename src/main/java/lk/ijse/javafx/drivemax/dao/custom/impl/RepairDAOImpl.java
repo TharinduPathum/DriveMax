@@ -4,6 +4,7 @@ import lk.ijse.javafx.drivemax.dao.SQLUtil;
 import lk.ijse.javafx.drivemax.dao.custom.RepairDAO;
 import lk.ijse.javafx.drivemax.dto.RepairDto;
 import lk.ijse.javafx.drivemax.entity.Repair;
+import lk.ijse.javafx.drivemax.entity.Supplier;
 import lk.ijse.javafx.drivemax.util.CrudUtil;
 
 import java.sql.ResultSet;
@@ -101,6 +102,17 @@ public class RepairDAOImpl implements RepairDAO {
 
     @Override
     public Optional<Repair> findById(String id) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM repair WHERE rep_id = ?", id);
+        if (resultSet.next()) {
+            return Optional.of(new Repair(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getString(5),
+                    resultSet.getString(6)
+            ));
+        }
         return Optional.empty();
     }
 
@@ -108,5 +120,16 @@ public class RepairDAOImpl implements RepairDAO {
     public boolean existRepairsByEmployeeId(String id) throws SQLException {
         ResultSet resultSet = SQLUtil.execute("SELECT * FROM repair WHERE rep_id = ?",id );
         return resultSet.next();
+    }
+
+    @Override
+    public Optional<String> getLastRepairId() throws SQLException {
+        String sql = "SELECT rep_id FROM repair ORDER BY rep_id DESC LIMIT 1";
+        ResultSet rs = SQLUtil.execute(sql);
+
+        if (rs.next()) {
+            return Optional.of(rs.getString("rep_id"));
+        }
+        return Optional.empty();
     }
 }

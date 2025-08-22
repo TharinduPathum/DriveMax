@@ -10,10 +10,10 @@ import lombok.*;
 @Setter
 @ToString
 public class SalaryDto {
-    private String salaryId;
-    private String employeeId;
-    private String attendance;
-    private String otWork;
+    private String id;
+    private String empId;
+    private String attend;
+    private String ot;
     private String dsalary;
     private String msalary;
     private String date;

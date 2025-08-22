@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @ToString
 public class AttendanceDto {
-    private String empId;
+    private String id;
     private String date;
     private String status;
 

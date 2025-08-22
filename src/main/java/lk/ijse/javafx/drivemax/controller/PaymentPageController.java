@@ -77,7 +77,7 @@ public class PaymentPageController implements Initializable {
         ObservableList<PaymentTM> list = FXCollections.observableArrayList();
         for (PaymentDto paymentDto : paymentDTOArrayList) {
             PaymentTM paymentTM = new PaymentTM(
-                    paymentDto.getPaymentId(),
+                    paymentDto.getPayId(),
                     paymentDto.getCustomerId(),
                     paymentDto.getAmount(),
                     paymentDto.getDate()

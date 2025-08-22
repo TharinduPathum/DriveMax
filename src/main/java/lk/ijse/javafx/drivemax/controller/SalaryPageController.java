@@ -115,10 +115,10 @@ public class SalaryPageController implements Initializable {
 
         for (SalaryDto salaryDto : salaryDTOArrayList){
             SalaryTM salaryTM = new SalaryTM(
-                    salaryDto.getSalaryId(),
-                    salaryDto.getEmployeeId(),
-                    salaryDto.getAttendance(),
-                    salaryDto.getOtWork(),
+                    salaryDto.getId(),
+                    salaryDto.getEmpId(),
+                    salaryDto.getAttend(),
+                    salaryDto.getOt(),
                     salaryDto.getDsalary(),
                     salaryDto.getMsalary(),
                     salaryDto.getDate()

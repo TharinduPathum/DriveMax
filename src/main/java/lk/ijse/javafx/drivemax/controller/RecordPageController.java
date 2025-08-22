@@ -14,6 +14,7 @@ import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
 import lk.ijse.javafx.drivemax.bo.custom.RecordBO;
 import lk.ijse.javafx.drivemax.dto.CustomerDto;
 import lk.ijse.javafx.drivemax.dto.RecordDto;
+import lk.ijse.javafx.drivemax.dto.tm.CustomerTM;
 import lk.ijse.javafx.drivemax.dto.tm.RecordTM;
 
 
@@ -71,22 +72,17 @@ public class RecordPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        ArrayList<RecordDto> recordDTOArrayList = recordBO.getAllRecords();
+        recordTable.setItems(FXCollections.observableArrayList(
+                recordBO.getAllRecords().stream().map(recordDto ->
+                        new RecordTM(
+                                recordDto.getRecId(),
+                                recordDto.getVehicleId(),
+                                recordDto.getDescription(),
+                                recordDto.getDate()
 
-        Collections.reverse(recordDTOArrayList);
+                        )).toList()
+        ));
 
-        ObservableList<RecordTM> list = FXCollections.observableArrayList();
-        for (RecordDto recordDto : recordDTOArrayList) {
-            RecordTM recordTM = new RecordTM(
-                    recordDto.getRecordId(),
-                    recordDto.getVehicleId(),
-                    recordDto.getDescription(),
-                    recordDto.getDate()
-            );
-            list.add(recordTM);
-        }
-
-        recordTable.setItems(list);
     }
 
 
@@ -124,13 +120,13 @@ public class RecordPageController implements Initializable {
 
         if (!isValid()) return;
 
-        String recordId = recIdValueLabel.getText();
+        String recId = recIdValueLabel.getText();
         String vehicleId = vehIdField.getText();
         String description = descriptionField.getText();
         String date = datePicker.getValue().toString();
 
         RecordDto recordDto = new RecordDto(
-                recordId,
+                recId,
                 vehicleId,
                 description,
                 date
@@ -168,10 +164,10 @@ public class RecordPageController implements Initializable {
 
 
     public void btnDeleteOnAction(ActionEvent event) {
-        String recordId = recIdValueLabel.getText();
+        String recId = recIdValueLabel.getText();
 
         try {
-            boolean isDeleted = recordBO.deleteRecord(recordId);
+            boolean isDeleted = recordBO.deleteRecord(recId);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -207,13 +203,13 @@ public class RecordPageController implements Initializable {
 
         if (!isValid()) return;
 
-        String recordId = recIdValueLabel.getText();
+        String recId = recIdValueLabel.getText();
         String vehicleId = vehIdField.getText();
         String description = descriptionField.getText();
         String date = datePicker.getValue().toString();
 
         RecordDto recordDto = new RecordDto(
-                recordId,
+                recId,
                 vehicleId,
                 description,
                 date

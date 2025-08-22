@@ -82,8 +82,8 @@ public class VehiclePageController implements Initializable {
 
         for (VehicleDto vehicleDto : vehicleDTOArrayList){
             VehicleTM vehicleTM = new VehicleTM(
-                    vehicleDto.getVehicleId(),
-                    vehicleDto.getCustomerId(),
+                    vehicleDto.getVehId(),
+                    vehicleDto.getCusId(),
                     vehicleDto.getType(),
                     vehicleDto.getBrand(),
                     vehicleDto.getRegNo()

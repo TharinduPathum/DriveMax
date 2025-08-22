@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @ToString
 public class InventoryDto {
-    private String sparePartId;
+    private String spId;
     private String supplierId;
     private String brand;
     private String name;

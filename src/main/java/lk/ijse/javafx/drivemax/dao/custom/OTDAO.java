@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface OTDAO extends CrudDAO<OT> {
     List<OT> getAll() throws SQLException;
+
+    boolean existsOTsByEmployeeId(String empId) throws SQLException;
 }

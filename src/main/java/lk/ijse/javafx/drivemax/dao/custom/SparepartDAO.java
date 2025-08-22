@@ -5,8 +5,10 @@ import lk.ijse.javafx.drivemax.dto.SparepartDto;
 import lk.ijse.javafx.drivemax.entity.Sparepart;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 public interface SparepartDAO extends CrudDAO<Sparepart> {
 
-    public boolean saveSparePartUsageWithInventoryUpdate(Sparepart sparepart) throws SQLException;
+
+    Optional<String> getLastSparepartId() throws SQLException;
 }

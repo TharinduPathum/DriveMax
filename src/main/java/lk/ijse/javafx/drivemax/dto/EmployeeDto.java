@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @ToString
 public class EmployeeDto {
-    private String employeeId;
+    private String id;
     private String name;
     private String speciality;
     private String address;

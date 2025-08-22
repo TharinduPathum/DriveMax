@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @ToString
 public class SparepartDto {
-    private String sparePartId;
+    private String spId;
     private String repair;
     private String date;
 

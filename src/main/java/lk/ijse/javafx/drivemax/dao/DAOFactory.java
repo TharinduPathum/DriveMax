@@ -28,6 +28,7 @@ public class DAOFactory {
             case SPAREPART -> (T) new SparepartDAOImpl();
             case SUPPLIER -> (T) new SupplierDAOImpl();
             case VEHICLE -> (T) new VehicleDAOImpl();
+            case QUERY -> (T) new QueryDAOImpl();
         };
 
         }

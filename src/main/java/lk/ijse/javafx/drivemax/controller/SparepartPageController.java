@@ -72,7 +72,7 @@ public class SparepartPageController implements Initializable {
         ObservableList<SparepartTM> list = FXCollections.observableArrayList();
         for (SparepartDto sparepartDto : sparepartDTOArrayList) {
             SparepartTM sparepartTM = new SparepartTM(
-                    sparepartDto.getSparePartId(),
+                    sparepartDto.getSpId(),
                     sparepartDto.getRepair(),
                     sparepartDto.getDate()
 

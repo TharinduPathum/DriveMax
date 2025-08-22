@@ -8,6 +8,7 @@ import lk.ijse.javafx.drivemax.dto.OTDto;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface OTBO extends SuperBO {
 
@@ -17,5 +18,5 @@ public interface OTBO extends SuperBO {
 
     boolean deleteOT(String empId, String date) throws InUseException, SQLException;
 
-    ArrayList<OTDto> getAllOT() throws SQLException;
+    List<OTDto> getAllOT() throws SQLException;
 }

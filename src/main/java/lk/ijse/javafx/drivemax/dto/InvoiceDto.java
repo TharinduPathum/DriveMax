@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @ToString
 public class InvoiceDto {
-    private String invoiceId;
+    private String invId;
     private String paymentId;
     private String customerId;
     private String description;

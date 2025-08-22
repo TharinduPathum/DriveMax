@@ -14,6 +14,7 @@ import lk.ijse.javafx.drivemax.bo.BOTypes;
 import lk.ijse.javafx.drivemax.bo.custom.InvoiceBO;
 import lk.ijse.javafx.drivemax.bo.custom.SupplierBO;
 import lk.ijse.javafx.drivemax.dto.SupplierDto;
+import lk.ijse.javafx.drivemax.dto.tm.CustomerTM;
 import lk.ijse.javafx.drivemax.dto.tm.SupplierTM;
 
 
@@ -23,6 +24,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class SupplierPageController implements Initializable {
 
@@ -56,6 +58,7 @@ public class SupplierPageController implements Initializable {
         try {
             loadNextId();
             loadTableData();
+
         } catch (Exception e) {
             new Alert(
                     Alert.AlertType.ERROR, "Fail to load data..!"
@@ -75,25 +78,24 @@ public class SupplierPageController implements Initializable {
     }
 
     private void loadTableData() throws SQLException {
-        // 1. Long code
-        ArrayList<SupplierDto> supplierDTOArrayList = supplierBO.getAllSupplier();
-        Collections.reverse(supplierDTOArrayList);
-        ObservableList<SupplierTM> list = FXCollections.observableArrayList();
 
-        for (SupplierDto supplierDto : supplierDTOArrayList){
-            SupplierTM supplierTM = new SupplierTM(
-                    supplierDto.getSupplierId(),
-                    supplierDto.getName(),
-                    supplierDto.getAddress(),
-                    supplierDto.getEmail(),
-                    supplierDto.getPhone()
-            );
-            list.add(supplierTM);
-        }
-        supplierTable.setItems(list);
+        supplierTable.setItems(FXCollections.observableArrayList(
+                supplierBO.getAllSupplier().stream()
+                        .map(supplierDto -> new SupplierTM(
+                                supplierDto.getId(),
+                                supplierDto.getName(),
+                                supplierDto.getAddress(),
+                                supplierDto.getEmail(),
+                                supplierDto.getPhone()
+                        ))
+                        .toList()   // Java 16+
+        ));
+
+
     }
 
     private void loadNextId() throws SQLException {
+
         String nextId = supplierBO.getNextId();
         supidValueLabel.setText(nextId);
     }
@@ -136,14 +138,14 @@ public class SupplierPageController implements Initializable {
 
         if (!isValidInput()) return;
 
-        String supplierId = supidValueLabel.getText();
+        String id = supidValueLabel.getText();
         String name = nameField.getText();
         String address = addressField.getText();
         String email = emailField.getText();
         String phone = phoneNoField.getText();
 
         SupplierDto supplierDto = new SupplierDto(
-                supplierId,
+                id,
                 name,
                 address,
                 email,
@@ -181,10 +183,10 @@ public class SupplierPageController implements Initializable {
 
 
     public void btnDeleteOnAction(ActionEvent event) {
-        String supplierId = supidValueLabel.getText();
+        String id = supidValueLabel.getText();
 
         try {
-            boolean isDeleted = supplierBO.deleteSupplier(supplierId);
+            boolean isDeleted = supplierBO.deleteSupplier(id);
             if (isDeleted) {
                 loadNextId();
                 loadTableData();
@@ -225,14 +227,14 @@ public class SupplierPageController implements Initializable {
 
         if (!isValidInput()) return;
 
-        String supplierId = supidValueLabel.getText();
+        String id = supidValueLabel.getText();
         String name = nameField.getText();
         String address = addressField.getText();
         String email = emailField.getText();
         String phone = phoneNoField.getText();
 
         SupplierDto supplierDto = new SupplierDto(
-                supplierId,
+                id,
                 name,
                 address,
                 email,

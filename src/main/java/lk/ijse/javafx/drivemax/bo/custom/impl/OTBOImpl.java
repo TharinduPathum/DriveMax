@@ -17,6 +17,7 @@ import lk.ijse.javafx.drivemax.entity.OT;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class OTBOImpl implements OTBO {
 
@@ -24,26 +25,55 @@ public class OTBOImpl implements OTBO {
 
     @Override
     public boolean saveOT(OTDto dto) throws DuplicateException, SQLException {
-        return false;
+        Optional<OT> optionalOT = otdao.findById(dto.getEmpId());
+        if (optionalOT.isPresent()) {
+            throw new DuplicateException("Duplicate OT record id");
+        }
+
+        OT ot = EntityDTOConverter.convert(dto, OT.class);
+
+        return otdao.save(ot);
     }
 
     @Override
     public boolean updateOT(OTDto dto) throws NotFoundException, SQLException {
-        return false;
+        Optional<OT> optionalOT = otdao.findById(dto.getEmpId());
+        if (optionalOT.isEmpty()) {
+            throw new NotFoundException("OT record not found..!");
+        }
+
+        try {
+            return otdao.delete(dto.getEmpId());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean deleteOT(String empId, String date) throws InUseException, SQLException {
-        return false;
+        Optional<OT> optionalOT = otdao.findById(empId);
+        if (optionalOT.isEmpty()) {
+            throw new NotFoundException("OT record not found..!");
+        }
+
+        if (otdao.existsOTsByEmployeeId(empId)){
+            throw new InUseException("Employee has OT records");
+        }
+
+        try {
+            return otdao.delete(empId);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public ArrayList<OTDto> getAllOT() throws SQLException {
+    public List<OTDto> getAllOT() throws SQLException {
         List<OT> ots = otdao.getAll();
         List<OTDto> otDtos = new ArrayList<>();
         for (OT ot : ots) {
             otDtos.add(EntityDTOConverter.convert(ot, OTDto.class));
         }
-        return (ArrayList<OTDto>) otDtos;
+        return otDtos;
     }
 }

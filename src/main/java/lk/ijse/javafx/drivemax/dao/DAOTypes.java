@@ -14,6 +14,7 @@ public enum DAOTypes {
     SPAREPART,
     SUPPLIER,
     VEHICLE,
+    QUERY
 
 
 }

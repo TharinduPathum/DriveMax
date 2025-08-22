@@ -17,7 +17,7 @@ public class InventoryDAOImpl implements InventoryDAO {
     @Override
     public List<Inventory> getAll() throws SQLException {
 
-            ResultSet resultSet = SQLUtil.execute("select * from inventory");
+            ResultSet resultSet = SQLUtil.execute("SELECT * FROM inventory");
 
             List<Inventory> list = new ArrayList<>();
             while (resultSet.next()) {
@@ -91,7 +91,15 @@ public class InventoryDAOImpl implements InventoryDAO {
 
     @Override
     public List<String> getAllIds() throws SQLException {
-        return List.of();
+        String sql = "SELECT sp_id FROM inventory";
+
+        ResultSet rs = SQLUtil.execute(sql);
+        ArrayList<String> idList = new ArrayList<>();
+
+        while (rs.next()) {
+            idList.add(rs.getString("sp_id"));
+        }
+        return idList;
     }
 
     @Override

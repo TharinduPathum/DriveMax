@@ -10,8 +10,8 @@ import lombok.*;
 @Setter
 @ToString
 public class VehicleDto {
-    private String vehicleId;
-    private String customerId;
+    private String vehId;
+    private String cusId;
     private String type;
     private String brand;
     private String regNo;
